@@ -147,7 +147,7 @@ Le disegno in verde per non confonderle con quelle ancora non corrette.
 {\bf Colosseo} lo modellizziamo come due emicicli (poligoni chiusi in modo di avere un'entrata e un'uscita).
 Fatto questo cominciamo a simulare una popolazione di 1000 persone che entra nel Colosseo sulla prima entrata.
 Poiché il {\sl drift} all'interno del Colosseo ci occorre anche un poligono area interna del Colosseo.
-
+\section{Codice}
 Vediamo come è fatto il codice.
 Le costanti sono
 
@@ -163,6 +163,100 @@ Le costanti sono
 \mbox{}\verb@const dt = 1.0 ::Float64               \# Il passo di integrazione@\\
 \mbox{}\verb@const numero\_iterazioni = 500            \# Il numero di iterazioni della simulazione@\\
 \mbox{}\verb@const diag = sqrt(2) ::Float64            \# diagonale@\\
+\mbox{}\verb@@{\NWsep}
+\end{list}
+\vspace{-2ex}
+\end{minipage}\\[4ex]
+\end{flushleft}
+\begin{flushleft} \small
+\begin{minipage}{\linewidth} \label{scrap2}
+\protect\makebox[0ex][r]{\NWtarget{nuweb2}{\rule{0ex}{0ex}}\hspace{1em}}\verb@"../../test/jl/variabili_globali.jl"@\nobreak\ {\footnotesize 2 }$\equiv$
+\vspace{-1ex}
+\begin{list}{}{} \item
+\mbox{}\verb@@\\
+\mbox{}\verb@# Variabili globali che sarebbe meglio eliminare@\\
+\mbox{}\verb@posizioni_prima = zeros(2,N)           # le posizioni dei pedoni al tempo t@\\
+\mbox{}\verb@#posizioni_dopo = rand(30.0:821.0,2,N)    # le posizioni dei pedoni al tempo t+dt@\\
+\mbox{}\verb@altre = [rand(0.0:0.0,1,N);rand(100.0:100.0,1,N)] # altre posizioni@\\
+\mbox{}\verb@posizioni_dopo = hcat([rand(100.0:100.0,1,N);rand(200.0:200.0,1,N)],altre) # le posizioni dei pedoni al tempo t+dt@\\
+\mbox{}\verb@velocita = zeros(2,N)                  # le posizioni dei pedoni al tempo t+dt@\\
+\mbox{}\verb@k = 0 ::Int64                       # Un iteratore@\\
+\mbox{}\verb@passo = 1.0 ::Float64                  # La dimensione di un passo@\\
+\mbox{}\verb@raggio = 0.5 ::Float64                 # Il raggio di non sovrapposizione dei pedoni@\\
+\mbox{}\verb@dimenpedone = 2.0 ::Float64                  # La dimensione del pedone @\\
+\mbox{}\verb@scalax = 1.5 ::Float64                 # lunghezza del passo di un pedone nella direzione x@\\
+\mbox{}\verb@scalay = 1.5 ::Float64                 # lunghezza del passo di un pedone nella direzione y@\\
+\mbox{}\verb@@\\
+\mbox{}\verb@mmm = 0.0 ::Float64                    # variabile di appoggio, ricontrollare se ci serve@\\
+\mbox{}\verb@@{\NWsep}
+\end{list}
+\vspace{-2ex}
+\end{minipage}\\[4ex]
+\end{flushleft}
+Per costruire i poligoni degli ostacoli dei pedoni costruiamo una costante di tipo  {\tt dictionary} 
+\begin{flushleft} \small
+\begin{minipage}{\linewidth} \label{scrap3}
+\protect\makebox[0ex][r]{\NWtarget{nuweb3}{\rule{0ex}{0ex}}\hspace{1em}}\verb@"../../test/jl/edifici_coord.jl"@\nobreak\ {\footnotesize 3 }$\equiv$
+\vspace{-1ex}
+\begin{list}{}{} \item
+\mbox{}\verb@@\\
+\mbox{}\verb@###### DICTIONARY POLIGONI DEGLI EDIFICI ##################@\\
+\mbox{}\verb@#colosseo=[0 0 100 0; 100 0 100 200; 100 200 50 50; 50 50 0 100; 0 100 0 0]@\\
+\mbox{}\verb@###### DICTIONARY POLIGONI DEGLI EDIFICI ##################@\\
+\mbox{}\verb@#colosseo=[0 0 100 0; 100 0 100 200; 100 200 50 50; 50 50 0 100; 0 100 0 0]@\\
+\mbox{}\verb@const edifici_coord = Dict{String, Array}(@\\
+\mbox{}\verb@"colosseo_coord" => [314 256; 329 242; 359 223; 382 212; 419 204; 454 200; 489 204; 523 211; 558 223; 597 245; 624 266; 659 306; 682 352; 688 403; 678 452;@\\
+\mbox{}\verb@651 444; 631 482; 600 507; 562 525; 520 533; 485 531; 446 524; 412 510; 374 490; 344 462; 314 420; 300 384; 300 351; 304 323; 312 299; 322 285], # L'earea interna@\\
+\mbox{}\verb@"colosseoa_coord" => [373 203;390 198; 410 192; 440 190; 464 190; 487 191; 507 194; 537 202; 567 213; 594 229; 615 244; 642 272; 662 298; 678 325; 693 357; 698 356;@\\
+\mbox{}\verb@698 411; 699 444; 691 459; 679 455; 687 422; 689 402; 688 387; 687 374; 684 358; 679 344; 673 330; 664 317; 657 305; 648 292; 638 280; 627 270; 615 259; 603 250;@\\
+\mbox{}\verb@590 242; 577 234; 561 224; 548 220; 532 212; 518 210; 502 206; 485 204; 471 202; 455 201; 441 201; 425 202; 409 206; 397 209; 380 213], # L'emiciclo a@\\
+\mbox{}\verb@"colosseob_coord" => [659 449; 652 464; 643 478; 636 488; 625 498; 616 506; 605 514; 595 519; 583 524; 559 534; 544 537; 530 539; 518 541; 502 541; 489 540; 473 538; @\\
+\mbox{}\verb@461 536; 444 531; 447 525; 465 528; 477 531; 491 533; 503 533; 518 533; 532 533; 545 531; 559 528; 573 523; 583 518; 593 514; 604 507; 615 502; 624 491; 631 483;@\\
+\mbox{}\verb@638 475; 644 464; 649 451; 650 444], # L'emiciclo b@\\
+\mbox{}\verb@"colosseoc_coord" => [409 519; 395 511; 381 503; 371 496; 361 488; 349 478; 340 468; 330 459; 322 448; 313 432; 309 423; 303 411; 298 400; 295 386; 294 374;@\\
+\mbox{}\verb@293 360; 293 344; 261 342; 264 323; 269 305; 276 289; 281 277; 288 266; 323 288; 315 303; 311 312; 307 325; 303 338; 301 350; 301 362; 300 373; 302 387;@\\
+\mbox{}\verb@307 400; 315 421; 329 443; 336 454; 347 466; 367 485; 388 498; 399 505; 412 510], # L'emiciclo c@\\
+\mbox{}\verb@"colosseod_coord" => [305 245; 321 230; 335 221; 355 223; 340 233; 326 242; 314 254], # L'emiciclo d@\\
+\mbox{}\verb@"g1_coord" => [139 36; 201 66; 226 71; 241 70; 270 81; 273 71; 201 57; 159 41],@\\
+\mbox{}\verb@"g2_coord" => [287 74; 379 93; 417 91; 431 96; 456 90; 465 98; 436 109; 432 125; 348 110; 348 102; 342 95; 284 81],@\\
+\mbox{}\verb@"g3_coord" => [424 83; 429 89; 459 83; 476 100; 441 116; 440 126; 518 141; 529 147; 560 159; 597 172; 632 193; 682 218; 737 246; 734 238; 703 200; 553 105; 448 76],@\\
+\mbox{}\verb@"arcoCostantino_coord" => [121 482; 131 439; 201 454; 191 497],@\\
+\mbox{}\verb@"prato1_coord" => [222 147; 230 127; 333 144; 315 182],@\\
+\mbox{}\verb@"prato2_coord" => [179 256; 213 171; 287 199; 248 238; 229 275],@\\
+\mbox{}\verb@"venereroma_coord" => [25 100; 193 165; 121 358; 25 329],@\\
+\mbox{}\verb@"metasudans_coord" => [120 424; 175 271; 224 291; 212 339; 222 400; 212 446],@\\
+\mbox{}\verb@"palatino_coord" => [23 783; 23 350; 100 377; 78 472; 80 488; 90 565; 83 652; 52 783],@\\
+\mbox{}\verb@"sangregorio_coord" => [120 785; 130 760; 147 740; 177 709; 203 683; 235 659; 269 639; 307 625; 353 617; 413 619; 470 620; 544 624; 649 625; 684 645; 738 785],@\\
+\mbox{}\verb@"bordoest_coord" => [608 230; 670 260; 700 280; 724 306; 734 330; 738 352; 737 376; 724 429; 693 504; 670 535; 622 565; @\\
+\mbox{}\verb@570 573; 513 579; 451 578; 391 575; 343 576; 303 583; 262 594; 273 590; 221 614; 193 634; 157 660; 171 620; 185 580; 202 540; 206 524; 230 507; 420 561; 425 537;@\\
+\mbox{}\verb@503 543; 583 549; 638 536; 679 509; 702 465; 684 449; 693 402; 691 351; 676 307; 663 282; 643 254; 612 228])@\\
+\mbox{}\verb@@{\NWsep}
+\end{list}
+\vspace{-2ex}
+\end{minipage}\\[4ex]
+\end{flushleft}
+Abbiamo poi una funzione che crea i poligoni degli edifici
+\begin{flushleft} \small
+\begin{minipage}{\linewidth} \label{scrap4}
+\protect\makebox[0ex][r]{\NWtarget{nuweb?}{\rule{0ex}{0ex}}\hspace{1em}}\verb@"../../test/jl/disegna_poligono.jl"@\nobreak\ {\footnotesize ? }$\equiv$
+\vspace{-1ex}
+\begin{list}{}{} \item
+\mbox{}\verb@@\\
+\mbox{}\verb@######################## UNA FUNZIONE CHE CREA I POLIGONI DEGLI EDIFICI ###############@\\
+\mbox{}\verb@function disegna_poligono(polig_coord)@\\
+\mbox{}\verb@   the_shape = ConvexShape()@\\
+\mbox{}\verb@   set_pointcount(the_shape, size(polig_coord)[1])@\\
+\mbox{}\verb@   for i = 1:size(polig_coord)[1]@\\
+\mbox{}\verb@      set_point(the_shape, i-1, Vector2f(polig_coord[i,1], polig_coord[i,2]))@\\
+\mbox{}\verb@   end@\\
+\mbox{}\verb@   set_position(the_shape, Vector2f(0.0, 0.0))@\\
+\mbox{}\verb@   set_fillcolor(the_shape, SFML.transparent)@\\
+\mbox{}\verb@   set_outlinecolor(the_shape, SFML.green)@\\
+\mbox{}\verb@   set_outline_thickness(the_shape, 2)@\\
+\mbox{}\verb@   return the_shape@\\
+\mbox{}\verb@end@\\
+\mbox{}\verb@##########################################################################################@\\
+\mbox{}\verb@@\\
 \mbox{}\verb@@{\NWsep}
 \end{list}
 \vspace{-2ex}

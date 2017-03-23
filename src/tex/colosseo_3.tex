@@ -126,18 +126,110 @@ Le disegno in verde per non confonderle con quelle ancora non corrette.
 {\bf Colosseo} lo modellizziamo come due emicicli (poligoni chiusi in modo di avere un'entrata e un'uscita).
 Fatto questo cominciamo a simulare una popolazione di 1000 persone che entra nel Colosseo sulla prima entrata.
 Poiché il {\sl drift} all'interno del Colosseo ci occorre anche un poligono area interna del Colosseo.
-
+\section{Codice}
 Vediamo come è fatto il codice.
 Le costanti sono
 
 @o ../../test/jl/costanti.jl @{
-\#MEMO: MODIFICARE IL 2N NEI FOR, CHE È INGUARDABILE
-\# INIZIALIZZO
-const N=1000 ::Int64						\# Il numero di pedoni
-const dt = 1.0 ::Float64					\# Il passo di integrazione
-const numero\_iterazioni = 500				\# Il numero di iterazioni della simulazione
-const diag = sqrt(2) ::Float64				\# diagonale
+# INIZIALIZZO LE COSTANTI
+const N=1000 ::Int64				# Il numero di pedoni
+const dt = 1.0 ::Float64			# Il passo di integrazione
+const numero_iterazioni = 500		# Il numero di iterazioni della simulazione
+const diag = sqrt(2) ::Float64		# diagonale
+const passo = 1.0 ::Float64			# La dimensione di un passo
+const raggio = 0.5 ::Float64		# Il raggio di non sovrapposizione dei pedoni
+const dimenpedone = 2.0 ::Float64	# La dimensione del pedone	
+const scalax = 1.5 ::Float64		# lunghezza del passo di un pedone nella direzione x
+const scalay = 1.5 ::Float64		# lunghezza del passo di un pedone nella direzione y
 @}
+
+
+@o ../../test/jl/variabili_globali.jl @{
+# Variabili globali che sarebbe meglio eliminare
+posizioni_prima = zeros(2,N)				# le posizioni dei pedoni al tempo t
+#posizioni_dopo = rand(30.0:821.0,2,N)		# le posizioni dei pedoni al tempo t+dt
+altre = [rand(0.0:0.0,1,N);rand(100.0:100.0,1,N)] # altre posizioni
+posizioni_dopo = hcat([rand(100.0:100.0,1,N);rand(200.0:200.0,1,N)],altre) # le posizioni dei pedoni al tempo t+dt
+velocita = zeros(2,N)						# le posizioni dei pedoni al tempo t+dt
+k = 0 ::Int64								# Un iteratore
+passo = 1.0 ::Float64						# La dimensione di un passo
+raggio = 0.5 ::Float64						# Il raggio di non sovrapposizione dei pedoni
+dimenpedone = 2.0 ::Float64						# La dimensione del pedone	
+scalax = 1.5 ::Float64						# lunghezza del passo di un pedone nella direzione x
+scalay = 1.5 ::Float64						# lunghezza del passo di un pedone nella direzione y
+
+mmm = 0.0 ::Float64							# variabile di appoggio, ricontrollare se ci serve
+@}
+
+Per costruire i poligoni degli ostacoli dei pedoni costruiamo una costante di tipo  {\tt dictionary} 
+@o ../../test/jl/edifici_coord.jl @{
+###### DICTIONARY POLIGONI DEGLI EDIFICI ##################
+#colosseo=[0 0 100 0; 100 0 100 200; 100 200 50 50; 50 50 0 100; 0 100 0 0]
+###### DICTIONARY POLIGONI DEGLI EDIFICI ##################
+#colosseo=[0 0 100 0; 100 0 100 200; 100 200 50 50; 50 50 0 100; 0 100 0 0]
+const edifici_coord = Dict{String, Array}(
+"colosseo_coord" => [314 256; 329 242; 359 223; 382 212; 419 204; 454 200; 489 204; 523 211; 558 223; 597 245; 624 266; 659 306; 682 352; 688 403; 678 452;
+651 444; 631 482; 600 507; 562 525; 520 533; 485 531; 446 524; 412 510; 374 490; 344 462; 314 420; 300 384; 300 351; 304 323; 312 299; 322 285], # L'earea interna
+"colosseoa_coord" => [373 203;390 198; 410 192; 440 190; 464 190; 487 191; 507 194; 537 202; 567 213; 594 229; 615 244; 642 272; 662 298; 678 325; 693 357; 698 356;
+698 411; 699 444; 691 459; 679 455; 687 422; 689 402; 688 387; 687 374; 684 358; 679 344; 673 330; 664 317; 657 305; 648 292; 638 280; 627 270; 615 259; 603 250;
+590 242; 577 234; 561 224; 548 220; 532 212; 518 210; 502 206; 485 204; 471 202; 455 201; 441 201; 425 202; 409 206; 397 209; 380 213], # L'emiciclo a
+"colosseob_coord" => [659 449; 652 464; 643 478; 636 488; 625 498; 616 506; 605 514; 595 519; 583 524; 559 534; 544 537; 530 539; 518 541; 502 541; 489 540; 473 538; 
+461 536; 444 531; 447 525; 465 528; 477 531; 491 533; 503 533; 518 533; 532 533; 545 531; 559 528; 573 523; 583 518; 593 514; 604 507; 615 502; 624 491; 631 483;
+638 475; 644 464; 649 451; 650 444], # L'emiciclo b
+"colosseoc_coord" => [409 519; 395 511; 381 503; 371 496; 361 488; 349 478; 340 468; 330 459; 322 448; 313 432; 309 423; 303 411; 298 400; 295 386; 294 374;
+293 360; 293 344; 261 342; 264 323; 269 305; 276 289; 281 277; 288 266; 323 288; 315 303; 311 312; 307 325; 303 338; 301 350; 301 362; 300 373; 302 387;
+307 400; 315 421; 329 443; 336 454; 347 466; 367 485; 388 498; 399 505; 412 510], # L'emiciclo c
+"colosseod_coord" => [305 245; 321 230; 335 221; 355 223; 340 233; 326 242; 314 254], # L'emiciclo d
+"g1_coord" => [139 36; 201 66; 226 71; 241 70; 270 81; 273 71; 201 57; 159 41],
+"g2_coord" => [287 74; 379 93; 417 91; 431 96; 456 90; 465 98; 436 109; 432 125; 348 110; 348 102; 342 95; 284 81],
+"g3_coord" => [424 83; 429 89; 459 83; 476 100; 441 116; 440 126; 518 141; 529 147; 560 159; 597 172; 632 193; 682 218; 737 246; 734 238; 703 200; 553 105; 448 76],
+"arcoCostantino_coord" => [121 482; 131 439; 201 454; 191 497],
+"prato1_coord" => [222 147; 230 127; 333 144; 315 182],
+"prato2_coord" => [179 256; 213 171; 287 199; 248 238; 229 275],
+"venereroma_coord" => [25 100; 193 165; 121 358; 25 329],
+"metasudans_coord" => [120 424; 175 271; 224 291; 212 339; 222 400; 212 446],
+"palatino_coord" => [23 783; 23 350; 100 377; 78 472; 80 488; 90 565; 83 652; 52 783],
+"sangregorio_coord" => [120 785; 130 760; 147 740; 177 709; 203 683; 235 659; 269 639; 307 625; 353 617; 413 619; 470 620; 544 624; 649 625; 684 645; 738 785],
+"bordoest_coord" => [608 230; 670 260; 700 280; 724 306; 734 330; 738 352; 737 376; 724 429; 693 504; 670 535; 622 565; 
+570 573; 513 579; 451 578; 391 575; 343 576; 303 583; 262 594; 273 590; 221 614; 193 634; 157 660; 171 620; 185 580; 202 540; 206 524; 230 507; 420 561; 425 537;
+503 543; 583 549; 638 536; 679 509; 702 465; 684 449; 693 402; 691 351; 676 307; 663 282; 643 254; 612 228])
+@}
+
+Abbiamo poi una funzione che crea i poligoni degli edifici
+@o ../../test/jl/disegna_poligono.jl @{
+######################## UNA FUNZIONE CHE CREA I POLIGONI DEGLI EDIFICI ###############
+function disegna_poligono(polig_coord)
+	the_shape = ConvexShape()
+	set_pointcount(the_shape, size(polig_coord)[1])
+	for i = 1:size(polig_coord)[1]
+		set_point(the_shape, i-1, Vector2f(polig_coord[i,1], polig_coord[i,2]))
+	end
+	set_position(the_shape, Vector2f(0.0, 0.0))
+	set_fillcolor(the_shape, SFML.transparent)
+	set_outlinecolor(the_shape, SFML.green)
+	set_outline_thickness(the_shape, 2)
+	return the_shape
+end
+##########################################################################################
+
+@}
+
+Abbiamo poi una funzione che verifica che le coordinate del pedone non siano all'interno di alcun poligono chiuso
+@o ../../test/jl/esterno.jl @{
+############ UNA FUNZIONE CHE VERIFICA CHE UN PUNTO NON SIA INTERNO AD ALCUN POLIGONO ###########
+function esterno(lax, lay, polig_coord)
+w = map(ciclo_poligono, values(polig_coord))
+a = sum(map(x->inpoly(lax,lay,x),w))
+	if a>0
+		return 1
+	else
+		return 0
+	end
+end
+@}
+#################################################################################################
+
+
 
  
 \bibliographystyle{plain}
