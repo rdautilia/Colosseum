@@ -5,11 +5,11 @@ using JLD
 
 #MEMO: MODIFICARE IL 2N NEI FOR, CHE È INGUARDABILE
 # INIZIALIZZO
-const N=2000 ::Int64						# Il numero di pedoni
+const N=1000 ::Int64						# Il numero di pedoni
 posizioni_prima = zeros(2,N)				# le posizioni dei pedoni al tempo t
 #posizioni_dopo = rand(30.0:821.0,2,N)		# le posizioni dei pedoni al tempo t+dt
-altre = [rand(0.0:800.0,1,N);rand(0.0:600.0,1,N)] # altre posizioni
-posizioni_dopo = hcat([rand(0.0:924.0,1,N);rand(0.0:600.0,1,N)],altre) # le posizioni dei pedoni al tempo t+dt
+altre = [rand(0.0:0.0,1,N);rand(100.0:100.0,1,N)] # altre posizioni
+posizioni_dopo = hcat([rand(100.0:100.0,1,N);rand(200.0:200.0,1,N)],altre) # le posizioni dei pedoni al tempo t+dt
 velocita = zeros(2,N)						# le posizioni dei pedoni al tempo t+dt
 const dt = 1.0 ::Float64					# Il passo di integrazione
 const numero_iterazioni = 500				# Il numero di iterazioni della simulazione
@@ -47,13 +47,28 @@ end
 
 ###### POLIGONI DEGLI EDIFICI ##################
 #colosseo=[0 0 100 0; 100 0 100 200; 100 200 50 50; 50 50 0 100; 0 100 0 0]
-colosseo_coord=[410 497;426 504;442 507;465 510;493 511;516 508;542 500;562 491;
-581 479;598 462;611 444;619 427;646 437;654 421;657 391;657 360;651 342;640 312;
-622 290;608 268;590 250;564 232;543 219;514 205;498 200;484 197; 465 192; 438 190;
-419 192; 402 193; 374 198; 353 205; 330 217; 311 231; 290 250; 274 268; 265 269;
-260 313; 255 331; 287 336; 287 359; 293 385; 303 409; 314 429; 330 447; 349 465;
-368 479; 390 490]
+colosseo_coord=[314 256; 329 242; 359 223; 382 212; 419 204; 454 200; 489 204; 523 211; 558 223; 597 245; 624 266; 659 306; 682 352; 688 403; 678 452;
+651 444; 631 482; 600 507; 562 525; 520 533; 485 531; 446 524; 412 510; 374 490; 344 462; 314 420; 300 384; 300 351; 304 323; 312 299; 322 285] # L'earea interna
 colosseo = ciclo_poligono(colosseo_coord)
+
+colosseo_coord_a=[373 203;390 198; 410 192; 440 190; 464 190; 487 191; 507 194; 537 202; 567 213; 594 229; 615 244; 642 272; 662 298; 678 325; 693 357; 698 356;
+698 411; 699 444; 691 459; 679 455; 687 422; 689 402; 688 387; 687 374; 684 358; 679 344; 673 330; 664 317; 657 305; 648 292; 638 280; 627 270; 615 259; 603 250;
+590 242; 577 234; 561 224; 548 220; 532 212; 518 210; 502 206; 485 204; 471 202; 455 201; 441 201; 425 202; 409 206; 397 209; 380 213] # L'emiciclo a
+colosseo_a = ciclo_poligono(colosseo_coord_a)
+
+colosseo_coord_b=[659 449; 652 464; 643 478; 636 488; 625 498; 616 506; 605 514; 595 519; 583 524; 559 534; 544 537; 530 539; 518 541; 502 541; 489 540; 473 538; 
+461 536; 444 531; 447 525; 465 528; 477 531; 491 533; 503 533; 518 533; 532 533; 545 531; 559 528; 573 523; 583 518; 593 514; 604 507; 615 502; 624 491; 631 483;
+638 475; 644 464; 649 451; 650 444] # L'emiciclo b
+colosseo_b = ciclo_poligono(colosseo_coord_b)
+
+colosseo_coord_c=[409 519; 395 511; 381 503; 371 496; 361 488; 349 478; 340 468; 330 459; 322 448; 313 432; 309 423; 303 411; 298 400; 295 386; 294 374;
+293 360; 293 344; 261 342; 264 323; 269 305; 276 289; 281 277; 288 266; 323 288; 315 303; 311 312; 307 325; 303 338; 301 350; 301 362; 300 373; 302 387;
+307 400; 315 421; 329 443; 336 454; 347 466; 367 485; 388 498; 399 505; 412 510] # L'emiciclo c
+colosseo_c = ciclo_poligono(colosseo_coord_c)
+
+colosseo_coord_d=[305 245; 321 230; 335 221; 355 223; 340 233; 326 242; 314 254] # L'emiciclo d
+colosseo_d = ciclo_poligono(colosseo_coord_d)
+
 
 g1_coord=[139 36; 201 66; 226 71; 241 70; 270 81; 273 71; 201 57; 159 41]
 g1=ciclo_poligono(g1_coord)
@@ -93,6 +108,46 @@ bordoest=ciclo_poligono(bordoest_coord)
 ################################################
 
 ########## DISEGNO I POLIGONI DEGLI EDIFICI #########################
+colosseo_a_shape = ConvexShape()
+set_pointcount(colosseo_a_shape, size(colosseo_coord_a)[1])
+for i = 1:size(colosseo_coord_a)[1]
+	set_point(colosseo_a_shape, i-1, Vector2f(colosseo_coord_a[i,1], colosseo_coord_a[i,2]))
+end
+set_position(colosseo_a_shape, Vector2f(0.0, 0.0))
+set_fillcolor(colosseo_a_shape, SFML.transparent)
+set_outlinecolor(colosseo_a_shape, SFML.green)
+set_outline_thickness(colosseo_a_shape, 2)
+
+colosseo_b_shape = ConvexShape()
+set_pointcount(colosseo_b_shape, size(colosseo_coord_b)[1])
+for i = 1:size(colosseo_coord_b)[1]
+	set_point(colosseo_b_shape, i-1, Vector2f(colosseo_coord_b[i,1], colosseo_coord_b[i,2]))
+end
+set_position(colosseo_b_shape, Vector2f(0.0, 0.0))
+set_fillcolor(colosseo_b_shape, SFML.transparent)
+set_outlinecolor(colosseo_b_shape, SFML.green)
+set_outline_thickness(colosseo_b_shape, 2)
+
+colosseo_c_shape = ConvexShape()
+set_pointcount(colosseo_c_shape, size(colosseo_coord_c)[1])
+for i = 1:size(colosseo_coord_c)[1]
+	set_point(colosseo_c_shape, i-1, Vector2f(colosseo_coord_c[i,1], colosseo_coord_c[i,2]))
+end
+set_position(colosseo_c_shape, Vector2f(0.0, 0.0))
+set_fillcolor(colosseo_c_shape, SFML.transparent)
+set_outlinecolor(colosseo_c_shape, SFML.green)
+set_outline_thickness(colosseo_c_shape, 2)
+
+colosseo_d_shape = ConvexShape()
+set_pointcount(colosseo_d_shape, size(colosseo_coord_d)[1])
+for i = 1:size(colosseo_coord_d)[1]
+	set_point(colosseo_d_shape, i-1, Vector2f(colosseo_coord_d[i,1], colosseo_coord_d[i,2]))
+end
+set_position(colosseo_d_shape, Vector2f(0.0, 0.0))
+set_fillcolor(colosseo_d_shape, SFML.transparent)
+set_outlinecolor(colosseo_d_shape, SFML.green)
+set_outline_thickness(colosseo_d_shape, 2)
+
 colosseo_shape = ConvexShape()
 set_pointcount(colosseo_shape, size(colosseo_coord)[1])
 for i = 1:size(colosseo_coord)[1]
@@ -100,7 +155,7 @@ for i = 1:size(colosseo_coord)[1]
 end
 set_position(colosseo_shape, Vector2f(0.0, 0.0))
 set_fillcolor(colosseo_shape, SFML.transparent)
-set_outlinecolor(colosseo_shape, SFML.red)
+set_outlinecolor(colosseo_shape, SFML.green)
 set_outline_thickness(colosseo_shape, 2)
 
 g1_shape = ConvexShape()
@@ -215,13 +270,14 @@ set_outline_thickness(bordoest_shape, 2)
 
 #####################################################################
 # LOAD THE TEXTURE FOR THE IMAGE
-texture = Texture("faseC.png")
+texture = Texture("../../img/00-FASE0.jpg")
 set_smooth(texture, true)
 texture_size = get_size(texture)
 ######################################
 # Create the text
 mousepos_text = RenderText()
-set_position(mousepos_text, Vector2f(texture_size.x+40, 20))
+#set_position(mousepos_text, Vector2f(texture_size.x+40, 20))
+set_position(mousepos_text, Vector2f(940, 20))
 set_string(mousepos_text, "Mouse Position: ")
 set_color(mousepos_text, SFML.red)
 set_charactersize(mousepos_text, 18)
@@ -231,17 +287,25 @@ set_charactersize(mousepos_text, 18)
 # Create the logo sprite and add the texture to it
 sfondo = Sprite()
 set_texture(sfondo, texture)
-set_position(sfondo, Vector2f(20, 20))
+set_position(sfondo, Vector2f(2, 2))
 set_origin(sfondo, Vector2f(0,0)) #(texture_size.x/2, texture_size.y/2))
-scale(sfondo, Vector2f(1.0, 1.0))
+scale(sfondo, Vector2f(0.27, 0.27)) #L'immagine di sfondo viene scalata
 ###########################################
 
 # AGGIORNAMENTO DI UNA POSIZIONE
 function aggiornamento(posingle)
 	#       dx = posingle[1] + scalax*(2*rand()-1.0) + 0.001*(180.0-posingle[1])	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
 	#       dy = posingle[2] + scalay*(2*rand()-1.0) + 0.001*(553.0-posingle[2])	#qui sarebbe meglio usare map()
-	       dx = posingle[1] + scalax*(2*rand()-1.0) + 0.001*(180.0-posingle[1])	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
-	       dy = posingle[2] + scalay*(2*rand()-1.0) + 0.001*(553.0-posingle[2])	#qui sarebbe meglio usare map()
+				if (inpoly(posingle[1],posingle[2],colosseo) == 1
+					)
+			       dx = posingle[1] + 2*scalax*(2*rand()-1.0) + 0.001*(402.0-posingle[1])	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
+			       dy = posingle[2] + 2*scalay*(2*rand()-1.0) + 0.001*(592.0-posingle[2])	#qui sarebbe meglio usare map()
+				else
+					dx = posingle[1] + scalax*(2*rand()-1.0) + 0.01*(326.0-posingle[1])	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
+			        dy = posingle[2] + scalay*(2*rand()-1.0) + 0.01*(273.0-posingle[2])	#qui sarebbe meglio usare map()
+			       
+				end
+	
        return [dx,dy]
 end
 ################################
@@ -290,18 +354,21 @@ function aggiornamento_totale(posizioni)
 		for i=1:2*N
 			a = aggiornamento(posizioni[:,i])
 			if (length(inrange(albero, a, raggio, true)) == 0 
-				&& inpoly(a[1],a[2],colosseo) == 0 
-				&& inpoly(a[1],a[2],g1) == 0 
-				&& inpoly(a[1],a[2],g2) == 0 
-				&& inpoly(a[1],a[2],g3) == 0 
-				&& inpoly(a[1],a[2],arco_costantino) == 0 
-				&& inpoly(a[1],a[2],prato1) == 0 
-				&& inpoly(a[1],a[2],prato2) == 0 
-				&& inpoly(a[1],a[2],venereroma) == 0
-				&& inpoly(a[1],a[2],metasudans) == 0
-				&& inpoly(a[1],a[2],palatino) == 0 
-				&& inpoly(a[1],a[2],sangregorio) == 0 
-				&& inpoly(a[1],a[2],bordoest) == 0 
+				&& inpoly(a[1],a[2],colosseo_a) == 0 
+				&& inpoly(a[1],a[2],colosseo_b) == 0 
+				&& inpoly(a[1],a[2],colosseo_c) == 0 
+				&& inpoly(a[1],a[2],colosseo_d) == 0 
+#				&& inpoly(a[1],a[2],g1) == 0 
+#				&& inpoly(a[1],a[2],g2) == 0 
+#				&& inpoly(a[1],a[2],g3) == 0 
+#				&& inpoly(a[1],a[2],arco_costantino) == 0 
+#				&& inpoly(a[1],a[2],prato1) == 0 
+#				&& inpoly(a[1],a[2],prato2) == 0 
+#				&& inpoly(a[1],a[2],venereroma) == 0
+#				&& inpoly(a[1],a[2],metasudans) == 0
+#				&& inpoly(a[1],a[2],palatino) == 0 
+#				&& inpoly(a[1],a[2],sangregorio) == 0 
+#				&& inpoly(a[1],a[2],bordoest) == 0 
 				)
 				posizioni[:,i] = a
 			end
@@ -311,7 +378,7 @@ end
 #########################################
 
 # VARIABILI
-fonti = Font("kenvector_future.ttf") :: Font
+fonti = Font("../../.fonts/kenvector_future.ttf") :: Font
 #########################################
 
 # COLORI
@@ -404,18 +471,22 @@ while isopen(window)
 	redraw(plotwindow)
 	# Draw the plots
 #####	draw(plotwindow)
-	draw(window, colosseo_shape)
-	draw(window, g1_shape)
-	draw(window, g2_shape)
-	draw(window, g3_shape)
-	draw(window, arco_costantino_shape)
-	draw(window, prato1_shape)
-	draw(window, prato2_shape)
-	draw(window, venereroma_shape)
-	draw(window, metasudans_shape)
-	draw(window, palatino_shape)
-	draw(window, sangregorio_shape)
-	draw(window, bordoest_shape)
+draw(window, colosseo_a_shape)
+draw(window, colosseo_b_shape)
+draw(window, colosseo_c_shape)
+draw(window, colosseo_d_shape)
+draw(window, colosseo_shape)
+#	draw(window, g1_shape)
+#	draw(window, g2_shape)
+#	draw(window, g3_shape)
+#	draw(window, arco_costantino_shape)
+#	draw(window, prato1_shape)
+#	draw(window, prato2_shape)
+#	draw(window, venereroma_shape)
+#	draw(window, metasudans_shape)
+#	draw(window, palatino_shape)
+#	draw(window, sangregorio_shape)
+#	draw(window, bordoest_shape)
 	draw(window, mousepos_text)
 	display(window)
 end
