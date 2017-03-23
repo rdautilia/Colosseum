@@ -1,0 +1,189 @@
+%
+%  untitled
+%
+%  Created by Roberto D'Autilia on 2017-03-21.
+%  Copyright (c) 2017 __MyCompanyName__. All rights reserved.
+%
+\documentclass[]{article}
+
+% Use utf-8 encoding for foreign characters
+\usepackage[utf8]{inputenc}
+
+% Setup for fullpage use
+\usepackage{fullpage}
+
+% Uncomment some of the following if you use the features
+%
+% Running Headers and footers
+%\usepackage{fancyhdr}
+
+% Multipart figures
+%\usepackage{subfigure}
+
+% More symbols
+%\usepackage{amsmath}
+%\usepackage{amssymb}
+%\usepackage{latexsym}
+% ROB>>More symbols
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{latexsym}
+%\usepackage{tikz}
+\newtheorem{definition}{Definizione}
+\newtheorem{theorem}{Teorema}
+\newtheorem{corollario}{Corollario}
+\newtheorem{proposizione}{Proposizione}
+\newtheorem{exercise}{Esercizio}
+\newtheorem{domanda}{Domanda}
+\newtheorem{lemma}{Lemma}
+\newtheorem{esempio}{Esempio}
+\renewcommand{\Re}{\mathop{\rm Re}}
+\renewcommand{\Im}{\mathop{\rm Im}}
+\renewcommand{\proofname}{Dimostrazione}
+% ROB
+\let\oldemptyset\emptyset
+\let\emptyset\varnothing
+% Surround parts of graphics with box
+\usepackage{boxedminipage}
+
+% Package for including code in the document
+\usepackage{listings}
+
+% If you want to generate a toc for each chapter (use with book)
+\usepackage{minitoc}
+
+% This is now the recommended way for checking for PDFLaTeX:
+\usepackage{ifpdf}
+
+%\newif\ifpdf
+%\ifx\pdfoutput\undefined
+%\pdffalse % we are not running PDFLaTeX
+%\else
+%\pdfoutput=1 % we are running PDFLaTeX
+%\pdftrue
+%\fi
+
+\ifpdf
+\usepackage[pdftex]{graphicx}
+\else
+\usepackage{graphicx}
+\fi
+\title{Flussi Pedonali nell'Area del Colosseo}
+\author{Roberto D'Autilia}
+
+\date{2017-03-21}
+
+\begin{document}
+\lstset{
+	language=C,                             % Code langugage
+	basicstyle=\ttfamily,                   % Code font, Examples: \footnotesize, \ttfamily
+	breaklines=true,
+	%	keywordstyle=\color{OliveGreen},        % Keywords font ('*' = uppercase)
+	%	commentstyle=\color{gray},              % Comments font
+	%	numbers=left,                           % Line nums position
+	%	numberstyle=\tiny,                      % Line-numbers fonts
+	%	stepnumber=1,                           % Step between two line-numbers
+	%	numbersep=5pt,                          % How far are line-numbers from code
+	%	backgroundcolor=\color{lightlightgray}, % Choose background color
+	%	frame=none,                             % A frame around the code
+	%	tabsize=2,                              % Default tab size
+	%	captionpos=b,                           % Caption-position = bottom
+	%	breaklines=true,                        % Automatic line breaking?
+	%	breakatwhitespace=false,                % Automatic breaks only at whitespace?
+	%	showspaces=false,                       % Dont make spaces visible
+	%	showtabs=false,                         % Dont make tabls visible
+	columns=flexible,                       % Column format
+	%	morekeywords={__global__, __device__},  % CUDA specific keywords
+}
+
+\ifpdf
+\DeclareGraphicsExtensions{.pdf, .jpg, .tif}
+\else
+\DeclareGraphicsExtensions{.eps, .jpg}
+\fi
+
+\maketitle
+
+
+\begin{abstract}
+{\tt File:\jobname.tex}\\
+\end{abstract}
+
+\section{Introduzione}
+In questo lavoro vogliamo studiare i flussi pedonali nell'area del Colosseo nell'assetto urbanistico attuale e in quello di progetto.
+I luoghi dai quali si muove la popolazione sono luscita della metro $M_1$, la Via Sacra $M_2$ e Via di San Gregorio $M_3$.
+Abbiamo due carte, la sitazione attuale ({\tt 00-FASE0.jpg}) e il progetto ({\tt 00-FASE1.jpg}).
+
+La mappa {\tt 00-FASE0.jpg} deve essere scalata per ssere adattata alla simulazione.
+La scala ottimale è $(0.27,0.27)$.
+
+Ora dobbiamo visualizzare le coordinate del mouse.
+Poi ricostruire tutte le aree chiuse.
+Le disegno in verde per non confonderle con quelle ancora non corrette.
+
+{\bf Colosseo} lo modellizziamo come due emicicli (poligoni chiusi in modo di avere un'entrata e un'uscita).
+Fatto questo cominciamo a simulare una popolazione di 1000 persone che entra nel Colosseo sulla prima entrata.
+Poiché il {\sl drift} all'interno del Colosseo ci occorre anche un poligono area interna del Colosseo. 
+\bibliographystyle{plain}
+%\bibliography{}
+%ROB
+\bibliography{/Users/dautilia-n/Desktop/DTC/WorkInProgress/References/bibliografia_rob.bib} % name your BibTeX data base
+%ROB
+\end{document}
+
+%%%%%%% ESEMPIO FIGURA %%%%%%%%%%%%%%%
+%\begin{figure}[ht]
+%\centering
+%\includegraphics[width=0.8\textwidth]{CCBeta0307409_bw.pdf}
+%\caption{The number of people that can be fed in an area $C$ as function of time for $\beta=0.3$ (dashed line) $\beta=0.74$ (continuous line)) and $\beta=0.9$ (dotted line)}
+%\label{fig:chini}
+%\end{figure}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
