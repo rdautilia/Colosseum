@@ -4,15 +4,15 @@ using AnimatedPlots
 using JLD
 
 # INIZIALIZZO LE COSTANTI
-const N=1000 ::Int64				# Il numero di pedoni
+const N=5000 ::Int64				# Il numero di pedoni
 const dt = 1.0 ::Float64			# Il passo di integrazione
 const numero_iterazioni = 500		# Il numero di iterazioni della simulazione
 const diag = sqrt(2) ::Float64		# diagonale
 const passo = 1.0 ::Float64			# La dimensione di un passo
-const raggio = 0.5 ::Float64		# Il raggio di non sovrapposizione dei pedoni
-const dimenpedone = 2.0 ::Float64	# La dimensione del pedone	
-const scalax = 1.5 ::Float64		# lunghezza del passo di un pedone nella direzione x
-const scalay = 1.5 ::Float64		# lunghezza del passo di un pedone nella direzione y
+const raggio = 1.8 ::Float64		# Il raggio di non sovrapposizione dei pedoni
+const dimenpedone = 1.0 ::Float64	# La dimensione del pedone	
+const scalax = 1.1 ::Float64		# lunghezza del passo di un pedone nella direzione x
+const scalay = 1.1 ::Float64		# lunghezza del passo di un pedone nella direzione y
 const areacolosseo_coord = [314 256; 329 242; 359 223; 382 212; 419 204; 454 200; 489 204; 
 523 211; 558 223; 597 245; 624 266; 659 306; 682 352; 688 403; 678 452; 651 444; 631 482; 
 600 507; 562 525; 520 533; 485 531; 446 524; 412 510; 374 490; 344 462; 314 420; 300 384; 
@@ -23,8 +23,8 @@ const areacolosseo = ciclo_poligono(areacolosseo_coord)
 
 # Variabili globali che sarebbe meglio eliminare
 posizioni_prima = zeros(2,N)				# le posizioni dei pedoni al tempo t
-altre = [rand(0.0:0.0,1,N);rand(100.0:100.0,1,N)] # altre posizioni
-posizioni_dopo = hcat([rand(100.0:100.0,1,N);rand(200.0:200.0,1,N)],altre) # le posizioni dei pedoni al tempo t+dt
+altre = [rand(339.0:362.0,1,N);rand(75.0:93.0,1,N)] # altre posizioni
+posizioni_dopo = hcat([rand(-14.0:-4.0,1,N);rand(341.0:361.0,1,N)],altre) # le posizioni dei pedoni al tempo t+dt
 velocita = zeros(2,N)						# le posizioni dei pedoni al tempo t+dt
 k = 0 ::Int64								# Un iteratore
 mmm = 0.0 ::Float64							# variabile di appoggio, ricontrollare se ci serve
