@@ -1,3 +1,24 @@
+% -------------------------------------------------------------------------
+% ------ nuweb macros (redefine as desired, or omit with "nuweb -p") ------
+% -------------------------------------------------------------------------
+\providecommand{\NWtxtMacroDefBy}{Macro defined by}
+\providecommand{\NWtxtMacroRefIn}{Macro referenced in}
+\providecommand{\NWtxtMacroNoRef}{Macro never referenced}
+\providecommand{\NWtxtDefBy}{Defined by}
+\providecommand{\NWtxtRefIn}{Referenced in}
+\providecommand{\NWtxtNoRef}{Not referenced}
+\providecommand{\NWtxtFileDefBy}{File defined by}
+\providecommand{\NWsep}{${\diamond}$}
+\providecommand{\NWlink}[2]{\hyperlink{#1}{#2}}
+\providecommand{\NWtarget}[2]{% move baseline up by \baselineskip 
+  \raisebox{\baselineskip}[1.5ex][0ex]{%
+    \mbox{%
+      \hypertarget{#1}{%
+        \raisebox{-1\baselineskip}[0ex][0ex]{%
+          \mbox{#2}%
+}}}}}
+% -------------------------------------------------------------------------
+
 %
 %  untitled
 %
@@ -130,16 +151,23 @@ Poiché il {\sl drift} all'interno del Colosseo ci occorre anche un poligono are
 Vediamo come è fatto il codice.
 Le costanti sono
 
-@o ../../test/jl/costanti.jl @{
-\#MEMO: MODIFICARE IL 2N NEI FOR, CHE È INGUARDABILE
-\# INIZIALIZZO
-const N=1000 ::Int64						\# Il numero di pedoni
-const dt = 1.0 ::Float64					\# Il passo di integrazione
-const numero\_iterazioni = 500				\# Il numero di iterazioni della simulazione
-const diag = sqrt(2) ::Float64				\# diagonale
-@}
-
- 
+\begin{flushleft} \small
+\begin{minipage}{\linewidth} \label{scrap1}
+\protect\makebox[0ex][r]{\NWtarget{nuweb1}{\rule{0ex}{0ex}}\hspace{1em}}\verb@"../../test/jl/costanti.jl"@\nobreak\ {\footnotesize 1 }$\equiv$
+\vspace{-1ex}
+\begin{list}{}{} \item
+\mbox{}\verb@@\\
+\mbox{}\verb@\#MEMO: MODIFICARE IL 2N NEI FOR, CHE È INGUARDABILE@\\
+\mbox{}\verb@\# INIZIALIZZO@\\
+\mbox{}\verb@const N=1000 ::Int64                \# Il numero di pedoni@\\
+\mbox{}\verb@const dt = 1.0 ::Float64               \# Il passo di integrazione@\\
+\mbox{}\verb@const numero\_iterazioni = 500            \# Il numero di iterazioni della simulazione@\\
+\mbox{}\verb@const diag = sqrt(2) ::Float64            \# diagonale@\\
+\mbox{}\verb@@{\NWsep}
+\end{list}
+\vspace{-2ex}
+\end{minipage}\\[4ex]
+\end{flushleft}
 \bibliographystyle{plain}
 %\bibliography{}
 %ROB
