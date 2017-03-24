@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.11 (TeX Live 2010/Fink) (format=pdflatex 2012.1.21)  23 MAR 2017 16:33
+This is pdfTeX, Version 3.1415926-1.40.11 (TeX Live 2010/Fink) (format=pdflatex 2012.1.21)  24 MAR 2017 14:48
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -716,7 +716,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 132--133
  []
 
 
-Overfull \hbox (93.88875pt too wide) in paragraph at lines 176--192
+Overfull \hbox (93.88875pt too wide) in paragraph at lines 180--196
 [][]\OT1/cmtt/m/n/9 posizioni_dopo = hcat([rand(100.0:100.0,1,N);rand(200.0:200
 .0,1,N)],altre) # le posizioni dei pedoni al tempo t+dt 
  []
@@ -724,120 +724,132 @@ Overfull \hbox (93.88875pt too wide) in paragraph at lines 176--192
 [1
 
 {/sw/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Overfull \hbox (287.6115pt too wide) in paragraph at lines 202--234
+Overfull \hbox (287.6115pt too wide) in paragraph at lines 206--238
 [][]\OT1/cmtt/m/n/9 "colosseo_coord" => [314 256; 329 242; 359 223; 382 212; 41
 9 204; 454 200; 489 204; 523 211; 558 223; 597 245; 624 266; 659 306; 682 352; 
 688 403; 678 452; 
  []
 
 
-Overfull \hbox (320.68611pt too wide) in paragraph at lines 202--234
+Overfull \hbox (320.68611pt too wide) in paragraph at lines 206--238
 [][]\OT1/cmtt/m/n/9 651 444; 631 482; 600 507; 562 525; 520 533; 485 531; 446 5
 24; 412 510; 374 490; 344 462; 314 420; 300 384; 300 351; 304 323; 312 299; 322
  285], # L'earea interna 
  []
 
 
-Overfull \hbox (330.136pt too wide) in paragraph at lines 202--234
+Overfull \hbox (330.136pt too wide) in paragraph at lines 206--238
 [][]\OT1/cmtt/m/n/9 "colosseoa_coord" => [373 203;390 198; 410 192; 440 190; 46
 4 190; 487 191; 507 194; 537 202; 567 213; 594 229; 615 244; 642 272; 662 298; 
 678 325; 693 357; 698 356; 
  []
 
 
-Overfull \hbox (315.96117pt too wide) in paragraph at lines 202--234
+Overfull \hbox (315.96117pt too wide) in paragraph at lines 206--238
 [][]\OT1/cmtt/m/n/9 698 411; 699 444; 691 459; 679 455; 687 422; 689 402; 688 3
 87; 687 374; 684 358; 679 344; 673 330; 664 317; 657 305; 648 292; 638 280; 627
  270; 615 259; 603 250; 
  []
 
 
-Overfull \hbox (263.98677pt too wide) in paragraph at lines 202--234
+Overfull \hbox (263.98677pt too wide) in paragraph at lines 206--238
 [][]\OT1/cmtt/m/n/9 590 242; 577 234; 561 224; 548 220; 532 212; 518 210; 502 2
 06; 485 204; 471 202; 455 201; 441 201; 425 202; 409 206; 397 209; 380 213], # 
 L'emiciclo a 
  []
 
 
-Overfull \hbox (334.86095pt too wide) in paragraph at lines 202--234
+Overfull \hbox (334.86095pt too wide) in paragraph at lines 206--238
 [][]\OT1/cmtt/m/n/9 "colosseob_coord" => [659 449; 652 464; 643 478; 636 488; 6
 25 498; 616 506; 605 514; 595 519; 583 524; 559 534; 544 537; 530 539; 518 541;
  502 541; 489 540; 473 538; 
  []
 
 
-Overfull \hbox (315.96117pt too wide) in paragraph at lines 202--234
+Overfull \hbox (315.96117pt too wide) in paragraph at lines 206--238
 [][]\OT1/cmtt/m/n/9 461 536; 444 531; 447 525; 465 528; 477 531; 491 533; 503 5
 33; 518 533; 532 533; 545 531; 559 528; 573 523; 583 518; 593 514; 604 507; 615
  502; 624 491; 631 483; 
  []
 
 
-Overfull \hbox (292.33644pt too wide) in paragraph at lines 202--234
+Overfull \hbox (292.33644pt too wide) in paragraph at lines 206--238
 [][]\OT1/cmtt/m/n/9 "colosseoc_coord" => [409 519; 395 511; 381 503; 371 496; 3
 61 488; 349 478; 340 468; 330 459; 322 448; 313 432; 309 423; 303 411; 298 400;
  295 386; 294 374; 
  []
 
 
-Overfull \hbox (273.43666pt too wide) in paragraph at lines 202--234
+Overfull \hbox (273.43666pt too wide) in paragraph at lines 206--238
 [][]\OT1/cmtt/m/n/9 293 360; 293 344; 261 342; 264 323; 269 305; 276 289; 281 2
 77; 288 266; 323 288; 315 303; 311 312; 307 325; 303 338; 301 350; 301 362; 300
  373; 302 387; 
  []
 
 
-Overfull \hbox (8.83974pt too wide) in paragraph at lines 202--234
+Overfull \hbox (8.83974pt too wide) in paragraph at lines 206--238
 [][]\OT1/cmtt/m/n/9 307 400; 315 421; 329 443; 336 454; 347 466; 367 485; 388 4
 98; 399 505; 412 510], # L'emiciclo c 
  []
 
 
-Overfull \hbox (27.73952pt too wide) in paragraph at lines 202--234
+Overfull \hbox (27.73952pt too wide) in paragraph at lines 206--238
 [][]\OT1/cmtt/m/n/9 "colosseod_coord" => [305 245; 321 230; 335 221; 355 223; 3
 40 233; 326 242; 314 254], # L'emiciclo d 
  []
 
 
-Overfull \hbox (98.6137pt too wide) in paragraph at lines 202--234
+Overfull \hbox (98.6137pt too wide) in paragraph at lines 206--238
 [][]\OT1/cmtt/m/n/9 "g2_coord" => [287 74; 379 93; 417 91; 431 96; 456 90; 465 
 98; 436 109; 432 125; 348 110; 348 102; 342 95; 284 81], 
  []
 
 
-Overfull \hbox (330.136pt too wide) in paragraph at lines 202--234
+Overfull \hbox (330.136pt too wide) in paragraph at lines 206--238
 [][]\OT1/cmtt/m/n/9 "g3_coord" => [424 83; 429 89; 459 83; 476 100; 441 116; 44
 0 126; 518 141; 529 147; 560 159; 597 172; 632 193; 682 218; 737 246; 734 238; 
 703 200; 553 105; 448 76], 
  []
 
 
-Overfull \hbox (306.51128pt too wide) in paragraph at lines 202--234
+Overfull \hbox (306.51128pt too wide) in paragraph at lines 206--238
 [][]\OT1/cmtt/m/n/9 "sangregorio_coord" => [120 785; 130 760; 147 740; 177 709;
  203 683; 235 659; 269 639; 307 625; 353 617; 413 619; 470 620; 544 624; 649 62
 5; 684 645; 738 785], 
  []
 
 
-Overfull \hbox (117.51347pt too wide) in paragraph at lines 202--234
+Overfull \hbox (117.51347pt too wide) in paragraph at lines 206--238
 [][]\OT1/cmtt/m/n/9 "bordoest_coord" => [608 230; 670 260; 700 280; 724 306; 73
 4 330; 738 352; 737 376; 724 429; 693 504; 670 535; 622 565; 
  []
 
 
-Overfull \hbox (315.96117pt too wide) in paragraph at lines 202--234
+Overfull \hbox (315.96117pt too wide) in paragraph at lines 206--238
 [][]\OT1/cmtt/m/n/9 570 573; 513 579; 451 578; 391 575; 343 576; 303 583; 262 5
 94; 273 590; 221 614; 193 634; 157 660; 171 620; 185 580; 202 540; 206 524; 230
  507; 420 561; 425 537; 
  []
 
 
-Overfull \hbox (65.53908pt too wide) in paragraph at lines 202--234
+Overfull \hbox (65.53908pt too wide) in paragraph at lines 206--238
 [][]\OT1/cmtt/m/n/9 503 543; 583 549; 638 536; 679 509; 702 465; 684 449; 693 4
 02; 691 351; 676 307; 663 282; 643 254; 612 228]) 
  []
 
 [2]
+Overfull \hbox (13.56468pt too wide) in paragraph at lines 275--288
+[][]\OT1/cmtt/m/n/9 ############ UNA FUNZIONE CHE VERIFICA CHE UN PUNTO NON SIA
+ INTERNO AD ALCUN POLIGONO ########### 
+ []
+
+
+Overfull \hbox (13.56468pt too wide) in paragraph at lines 275--288
+[][]\OT1/cmtt/m/n/9 ###########################################################
+###################################### 
+ []
+
+[3]
 No file colosseo_3_nuweb.bbl.
 Package minitoc Info: I0009
 (minitoc)             Listing minitoc auxiliary files. 
@@ -849,23 +861,19 @@ Package minitoc(hints) Warning: W0024
 (minitoc(hints))                Some hints have been written 
 (minitoc(hints))                in the colosseo_3_nuweb.log file.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 270.
-[3]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 270.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 330.
+[4]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 330.
  (./colosseo_3_nuweb.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 270.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 330.
 Package rerunfilecheck Info: File `colosseo_3_nuweb.out' has not changed.
 (rerunfilecheck)             Checksum: 0DDEFC420C32B3D2240314DB81D629D6;88.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
  ) 
 Here is how much of TeX's memory you used:
- 8991 strings out of 493747
- 125441 string characters out of 3149386
- 250711 words of memory out of 3000000
- 11897 multiletter control sequences out of 15000+200000
+ 8997 strings out of 493747
+ 125499 string characters out of 3149386
+ 250809 words of memory out of 3000000
+ 11900 multiletter control sequences out of 15000+200000
  14479 words of font info for 61 fonts, out of 3000000 for 9000
  714 hyphenation exceptions out of 8191
  31i,8n,49p,266b,408s stack positions out of 5000i,500n,10000p,200000b,50000s
@@ -880,10 +888,10 @@ onts/cm/cmr8.pfb></sw/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl10.pf
 b></sw/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></sw/share/tex
 mf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></sw/share/texmf-dist/fonts/t
 ype1/public/amsfonts/cm/cmtt9.pfb>
-Output written on colosseo_3_nuweb.pdf (3 pages, 138871 bytes).
+Output written on colosseo_3_nuweb.pdf (4 pages, 142816 bytes).
 PDF statistics:
- 88 PDF objects out of 1000 (max. 8388607)
- 69 compressed objects within 1 object stream
- 10 named destinations out of 1000 (max. 500000)
+ 95 PDF objects out of 1000 (max. 8388607)
+ 75 compressed objects within 1 object stream
+ 13 named destinations out of 1000 (max. 500000)
  17 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -91,7 +91,7 @@
 \else
 \usepackage{graphicx}
 \fi
-\title{Flussi Pedonali nell'Area del Colosseo}
+\title{Flussi Pedonali nell'Area del Colosseo: Codici}
 \author{Roberto D'Autilia}
 
 \date{2017-03-21}
@@ -137,7 +137,7 @@ In questo lavoro vogliamo studiare i flussi pedonali nell'area del Colosseo nell
 I luoghi dai quali si muove la popolazione sono luscita della metro $M_1$, la Via Sacra $M_2$ e Via di San Gregorio $M_3$.
 Abbiamo due carte, la sitazione attuale ({\tt 00-FASE0.jpg}) e il progetto ({\tt 00-FASE1.jpg}).
 
-La mappa {\tt 00-FASE0.jpg} deve essere scalata per ssere adattata alla simulazione.
+La mappa {\tt 00-FASE0.jpg} deve essere scalata per essere adattata alla simulazione.
 La scala ottimale è $(0.27,0.27)$.
 
 Ora dobbiamo visualizzare le coordinate del mouse.
@@ -157,12 +157,16 @@ Le costanti sono
 \vspace{-1ex}
 \begin{list}{}{} \item
 \mbox{}\verb@@\\
-\mbox{}\verb@\#MEMO: MODIFICARE IL 2N NEI FOR, CHE È INGUARDABILE@\\
-\mbox{}\verb@\# INIZIALIZZO@\\
-\mbox{}\verb@const N=1000 ::Int64                \# Il numero di pedoni@\\
-\mbox{}\verb@const dt = 1.0 ::Float64               \# Il passo di integrazione@\\
-\mbox{}\verb@const numero\_iterazioni = 500            \# Il numero di iterazioni della simulazione@\\
-\mbox{}\verb@const diag = sqrt(2) ::Float64            \# diagonale@\\
+\mbox{}\verb@# INIZIALIZZO LE COSTANTI@\\
+\mbox{}\verb@const N=1000 ::Int64          # Il numero di pedoni@\\
+\mbox{}\verb@const dt = 1.0 ::Float64         # Il passo di integrazione@\\
+\mbox{}\verb@const numero_iterazioni = 500    # Il numero di iterazioni della simulazione@\\
+\mbox{}\verb@const diag = sqrt(2) ::Float64      # diagonale@\\
+\mbox{}\verb@const passo = 1.0 ::Float64         # La dimensione di un passo@\\
+\mbox{}\verb@const raggio = 0.5 ::Float64     # Il raggio di non sovrapposizione dei pedoni@\\
+\mbox{}\verb@const dimenpedone = 2.0 ::Float64   # La dimensione del pedone @\\
+\mbox{}\verb@const scalax = 1.5 ::Float64     # lunghezza del passo di un pedone nella direzione x@\\
+\mbox{}\verb@const scalay = 1.5 ::Float64     # lunghezza del passo di un pedone nella direzione y@\\
 \mbox{}\verb@@{\NWsep}
 \end{list}
 \vspace{-2ex}
@@ -170,7 +174,7 @@ Le costanti sono
 \end{flushleft}
 \begin{flushleft} \small
 \begin{minipage}{\linewidth} \label{scrap2}
-\protect\makebox[0ex][r]{\NWtarget{nuweb2}{\rule{0ex}{0ex}}\hspace{1em}}\verb@"../../test/jl/variabili_globali.jl"@\nobreak\ {\footnotesize 2 }$\equiv$
+\protect\makebox[0ex][r]{\NWtarget{nuweb2a}{\rule{0ex}{0ex}}\hspace{1em}}\verb@"../../test/jl/variabili_globali.jl"@\nobreak\ {\footnotesize 2a }$\equiv$
 \vspace{-1ex}
 \begin{list}{}{} \item
 \mbox{}\verb@@\\
@@ -196,7 +200,7 @@ Le costanti sono
 Per costruire i poligoni degli ostacoli dei pedoni costruiamo una costante di tipo  {\tt dictionary} 
 \begin{flushleft} \small
 \begin{minipage}{\linewidth} \label{scrap3}
-\protect\makebox[0ex][r]{\NWtarget{nuweb3}{\rule{0ex}{0ex}}\hspace{1em}}\verb@"../../test/jl/edifici_coord.jl"@\nobreak\ {\footnotesize 3 }$\equiv$
+\protect\makebox[0ex][r]{\NWtarget{nuweb2b}{\rule{0ex}{0ex}}\hspace{1em}}\verb@"../../test/jl/edifici_coord.jl"@\nobreak\ {\footnotesize 2b }$\equiv$
 \vspace{-1ex}
 \begin{list}{}{} \item
 \mbox{}\verb@@\\
@@ -238,7 +242,7 @@ Per costruire i poligoni degli ostacoli dei pedoni costruiamo una costante di ti
 Abbiamo poi una funzione che crea i poligoni degli edifici
 \begin{flushleft} \small
 \begin{minipage}{\linewidth} \label{scrap4}
-\protect\makebox[0ex][r]{\NWtarget{nuweb?}{\rule{0ex}{0ex}}\hspace{1em}}\verb@"../../test/jl/disegna_poligono.jl"@\nobreak\ {\footnotesize ? }$\equiv$
+\protect\makebox[0ex][r]{\NWtarget{nuweb3a}{\rule{0ex}{0ex}}\hspace{1em}}\verb@"../../test/jl/disegna_poligono.jl"@\nobreak\ {\footnotesize 3a }$\equiv$
 \vspace{-1ex}
 \begin{list}{}{} \item
 \mbox{}\verb@@\\
@@ -257,6 +261,62 @@ Abbiamo poi una funzione che crea i poligoni degli edifici
 \mbox{}\verb@end@\\
 \mbox{}\verb@##########################################################################################@\\
 \mbox{}\verb@@\\
+\mbox{}\verb@@{\NWsep}
+\end{list}
+\vspace{-2ex}
+\end{minipage}\\[4ex]
+\end{flushleft}
+Abbiamo poi una funzione che verifica che le coordinate del pedone non siano all'interno di alcun poligono chiuso
+\begin{flushleft} \small
+\begin{minipage}{\linewidth} \label{scrap5}
+\protect\makebox[0ex][r]{\NWtarget{nuweb3b}{\rule{0ex}{0ex}}\hspace{1em}}\verb@"../../test/jl/esterno.jl"@\nobreak\ {\footnotesize 3b }$\equiv$
+\vspace{-1ex}
+\begin{list}{}{} \item
+\mbox{}\verb@@\\
+\mbox{}\verb@############ UNA FUNZIONE CHE VERIFICA CHE UN PUNTO NON SIA INTERNO AD ALCUN POLIGONO ###########@\\
+\mbox{}\verb@function esterno(lax, lay, polig_coord)@\\
+\mbox{}\verb@w = map(ciclo_poligono, values(polig_coord))@\\
+\mbox{}\verb@a = sum(map(x->inpoly(lax,lay,x),w))@\\
+\mbox{}\verb@   if a>0@\\
+\mbox{}\verb@      return 1@\\
+\mbox{}\verb@   else@\\
+\mbox{}\verb@      return 0@\\
+\mbox{}\verb@   end@\\
+\mbox{}\verb@end@\\
+\mbox{}\verb@#################################################################################################@\\
+\mbox{}\verb@@{\NWsep}
+\end{list}
+\vspace{-2ex}
+\end{minipage}\\[4ex]
+\end{flushleft}
+Dobbiamo ora definire lo stato dei pedoni.
+Fino a questo momento lo stato dei pedoni era rappresentato dalle sole coordinate $(x,y)$.
+Ora vogliamo invece definire un tipo (o una struttura) con le coordinate spaziali e le coordinate dell'obiettivo.
+Nell'esempio seguente introduciamo il tipo Pedone e costruiamo un array di pedoni inizializzati a {\tt PEDONE\_DEFAULT}
+\begin{flushleft} \small
+\begin{minipage}{\linewidth} \label{scrap6}
+\protect\makebox[0ex][r]{\NWtarget{nuweb4}{\rule{0ex}{0ex}}\hspace{1em}}\verb@"../../test/jl/pedone_test.jl"@\nobreak\ {\footnotesize 4 }$\equiv$
+\vspace{-1ex}
+\begin{list}{}{} \item
+\mbox{}\verb@@\\
+\mbox{}\verb@type Pedone@\\
+\mbox{}\verb@      lax ::Float64@\\
+\mbox{}\verb@      lay::Float64@\\
+\mbox{}\verb@      lavx::Float64@\\
+\mbox{}\verb@      lavy::Float64@\\
+\mbox{}\verb@      ladestx::Float64@\\
+\mbox{}\verb@      ladesty::Float64@\\
+\mbox{}\verb@      @\\
+\mbox{}\verb@end@\\
+\mbox{}\verb@const PEDONE_DEFAULT = Pedone(0.1,0.1,0.1,0.1,0.1,0.1)@\\
+\mbox{}\verb@@\\
+\mbox{}\verb@Pedone() = Pedone(PEDONE_DEFAULT)@\\
+\mbox{}\verb@\#ESEMPIO DI UN Array di 100 pedoni@\\
+\mbox{}\verb@@\\
+\mbox{}\verb@popolazione = Array(Pedone,100)@\\
+\mbox{}\verb@for i in 1:100@\\
+\mbox{}\verb@   popolazione[i] = Pedone()@\\
+\mbox{}\verb@end@\\
 \mbox{}\verb@@{\NWsep}
 \end{list}
 \vspace{-2ex}
