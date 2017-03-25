@@ -3,8 +3,8 @@ using SFML
 using AnimatedPlots
 using JLD
 
-## INIZIALIZZO LE COSTANTI
-const N=5000 ::Int64				# Il numero di pedoni
+# INIZIALIZZO LE COSTANTI
+const N=100 ::Int64				# Il numero di pedoni
 const dt = 1.0 ::Float64			# Il passo di integrazione
 const numero_iterazioni = 500		# Il numero di iterazioni della simulazione
 const diag = sqrt(2) ::Float64		# diagonale
@@ -16,14 +16,37 @@ const scalay = 1.1 ::Float64		# lunghezza del passo di un pedone nella direzione
 const areacolosseo_coord = [314 256; 329 242; 359 223; 382 212; 419 204; 454 200; 489 204; 
 523 211; 558 223; 597 245; 624 266; 659 306; 682 352; 688 403; 678 452; 651 444; 631 482; 
 600 507; 562 525; 520 533; 485 531; 446 524; 412 510; 374 490; 344 462; 314 420; 300 384; 
-300 351; 304 323; 312 299; 322 285] # L'earea interna dell'edificio
+300 351; 304 323; 312 299; 322 285] # L'earea interna
 
-##########################################################################
+############################### QUESTA È UNA PROVA 
+type Statopedone 
+		lax ::Float64
+		lay::Float64
+		lavx::Float64
+		lavy::Float64
+		ladestx::Float64
+		ladesty::Float64
+		
+end
+const STATOPEDONE_DEFAULT = Statopedone(0.1,0.1,0.1,0.1,0.1,0.1)
+const STATOPEDONE_ZERO = Statopedone(0.0,0.0,0.0,0.0,0.0,0.0)
+posizioni_prima = Array(Statopedone,N)
+posizioni_dopo = Array(Statopedone,N)
+
+for i in 1:100
+	posizioni_prima[i] = Statopedone(STATOPEDONE_ZERO)
+end
+
+for i in 1:100
+	posizioni_dopo[i] = Statopedone(STATOPEDONE_DEFAULT)
+end
+
+#################################
 
 # Variabili globali che sarebbe meglio eliminare
-posizioni_prima = zeros(2,N)				# le posizioni dei pedoni al tempo t
-altre = [rand(339.0:362.0,1,N);rand(75.0:93.0,1,N)] # altre posizioni
-posizioni_dopo = hcat([rand(-14.0:-4.0,1,N);rand(341.0:361.0,1,N)],altre) # le posizioni dei pedoni al tempo t+dt
+####ROB> posizioni_prima = zeros(2,N)				# le posizioni dei pedoni al tempo t
+####ROB> altre = [rand(339.0:362.0,1,N);rand(75.0:93.0,1,N)] # altre posizioni
+####ROB> posizioni_dopo = hcat([rand(-14.0:-4.0,1,N);rand(341.0:361.0,1,N)],altre) # le posizioni dei pedoni al tempo t+dt
 velocita = zeros(2,N)						# le posizioni dei pedoni al tempo t+dt
 k = 0 ::Int64								# Un iteratore
 mmm = 0.0 ::Float64							# variabile di appoggio, ricontrollare se ci serve
@@ -32,7 +55,7 @@ fonti = Font("../../fonts/kenvector_future.ttf") :: Font
 #########################################
 
 
-######### Funzione che formatta il poligono ciclicamente
+######### Funzione che formatta il poligono ciclicamente #####
 function ciclo_poligono(lista)
 	c=[]
 	for i=2:size(lista)[1]
@@ -48,8 +71,8 @@ function ciclo_poligono(lista)
 	cal=reshape(c,4,size(lista)[1])
 			return transpose(cal)
 end
-############################################################## NON CAPISCO PERCHE' DEBBA ANDARE QUI
-const areacolosseo = ciclo_poligono(areacolosseo_coord)
+##############################################################
+const areacolosseo = ciclo_poligono(areacolosseo_coord) # Non capisco perché debba stare qui
 
 ###### DICTIONARY POLIGONI DEGLI EDIFICI ##################
 const edifici_coord = Dict{String, Array}(
@@ -98,9 +121,9 @@ function esterno(lax, lay, polig_coord)
 w = map(ciclo_poligono, values(polig_coord))
 a = sum(map(x->inpoly(lax,lay,x),w))
 	if a>0
-		return 1
+		return 1 # interno
 	else
-		return 0
+		return 0 # esterno
 	end
 end
 #################################################################################################
@@ -145,6 +168,23 @@ function aggiornamento(posingle)
        return [dx,dy]
 end
 ################################
+# AGGIORNAMENTO DI UNA POSIZIONE
+function aggiornamento_nuovo(posingle::Statopedone)
+	#       dx = posingle[1] + scalax*(2*rand()-1.0) + 0.001*(180.0-posingle[1])	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
+	#       dy = posingle[2] + scalay*(2*rand()-1.0) + 0.001*(553.0-posingle[2])	#qui sarebbe meglio usare map()
+				if (inpoly(posingle.lax,posingle.lay,areacolosseo) == 1
+					)
+			       dx = posingle.lax + 2*scalax*(2*rand()-1.0) + 0.001*(posingle.ladestx-posingle.lax)	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
+			       dy = posingle.lay + 2*scalay*(2*rand()-1.0) + 0.001*(posingle.ladesty-posingle.lay)	#qui sarebbe meglio usare map()
+				else
+					dx = posingle.lax + scalax*(2*rand()-1.0) + 0.01*(posingle.ladestx-posingle.lax)	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
+			        dy = posingle.lay + scalay*(2*rand()-1.0) + 0.01*(posingle.ladesty-posingle.lay)	#qui sarebbe meglio usare map()
+			       
+				end
+	
+       return Pedone(dx,dy,posingle.lavx,posingle.lavy,posingle.ladestx,posingle.ladesty)
+end
+################################
 
 # CALCOLO DELLE VELOCITA'
 function veloc(posprima,posdopo)
@@ -186,6 +226,19 @@ end
 
 # AGGORNAMENTO DEL VETTORE DELLE POSIZIONI
 function aggiornamento_totale(posizioni)
+	albero = KDTree(posizioni)
+		for i=1:2*N
+			a = aggiornamento(posizioni[:,i])
+			if (length(inrange(albero, a, raggio, true)) == 0 && esterno(a[1],a[2],edifici_coord)==0)
+				posizioni[:,i] = a
+			end
+		end
+	return posizioni
+end
+#########################################
+
+# AGGORNAMENTO DEL VETTORE DELLE POSIZIONI
+function aggiornamento_totale_nuovo(posizioni)
 	albero = KDTree(posizioni)
 		for i=1:2*N
 			a = aggiornamento(posizioni[:,i])
