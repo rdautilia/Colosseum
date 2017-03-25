@@ -33,6 +33,7 @@ fonti = Font("../../fonts/kenvector_future.ttf") :: Font
 
 
 ######### Funzione che formatta il poligono ciclicamente
+
 function ciclo_poligono(lista)
 	c=[]
 	for i=2:size(lista)[1]
