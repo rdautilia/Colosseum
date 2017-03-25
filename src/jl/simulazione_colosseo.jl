@@ -3,7 +3,7 @@ using SFML
 using AnimatedPlots
 using JLD
 
-# INIZIALIZZO LE COSTANTI
+## INIZIALIZZO LE COSTANTI
 const N=5000 ::Int64				# Il numero di pedoni
 const dt = 1.0 ::Float64			# Il passo di integrazione
 const numero_iterazioni = 500		# Il numero di iterazioni della simulazione
@@ -16,12 +16,9 @@ const scalay = 1.1 ::Float64		# lunghezza del passo di un pedone nella direzione
 const areacolosseo_coord = [314 256; 329 242; 359 223; 382 212; 419 204; 454 200; 489 204; 
 523 211; 558 223; 597 245; 624 266; 659 306; 682 352; 688 403; 678 452; 651 444; 631 482; 
 600 507; 562 525; 520 533; 485 531; 446 524; 412 510; 374 490; 344 462; 314 420; 300 384; 
-300 351; 304 323; 312 299; 322 285] # L'earea interna
-const areacolosseo = ciclo_poligono(areacolosseo_coord)
+300 351; 304 323; 312 299; 322 285] # L'earea interna dell'edificio
 
 ##########################################################################
-## C'è un sacco di lavoro da fare
-################
 
 # Variabili globali che sarebbe meglio eliminare
 posizioni_prima = zeros(2,N)				# le posizioni dei pedoni al tempo t
@@ -35,7 +32,7 @@ fonti = Font("../../fonts/kenvector_future.ttf") :: Font
 #########################################
 
 
-######### Funzione che formatta il poligono ciclicamente #####
+######### Funzione che formatta il poligono ciclicamente
 function ciclo_poligono(lista)
 	c=[]
 	for i=2:size(lista)[1]
@@ -51,7 +48,8 @@ function ciclo_poligono(lista)
 	cal=reshape(c,4,size(lista)[1])
 			return transpose(cal)
 end
-##############################################################
+############################################################## NON CAPISCO PERCHE' DEBBA ANDARE QUI
+const areacolosseo = ciclo_poligono(areacolosseo_coord)
 
 ###### DICTIONARY POLIGONI DEGLI EDIFICI ##################
 const edifici_coord = Dict{String, Array}(
