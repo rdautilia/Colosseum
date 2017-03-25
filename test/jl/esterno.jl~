@@ -1,5 +1,5 @@
 
-############ LA FUNZIONE CHE VERIFICA CHE UN PUNTO NON SIA INTERNO AD ALCUN POLIGONO ###########
+############ UNA FUNZIONE CHE VERIFICA CHE UN PUNTO NON SIA INTERNO AD ALCUN POLIGONO ###########
 function esterno(lax, lay, polig_coord)
 w = map(ciclo_poligono, values(polig_coord))
 a = sum(map(x->inpoly(lax,lay,x),w))

@@ -8,6 +8,7 @@ type Pedone
 		
 end
 const PEDONE_DEFAULT = Pedone(0.1,0.1,0.1,0.1,0.1,0.1)
+const PEDONE_ZERO = Pedone(0.0,0.0,0.0,0.0,0.0,0.0)
 
 Pedone() = Pedone(PEDONE_DEFAULT)
 #ESEMPIO DI UN Array di 100 pedoni
