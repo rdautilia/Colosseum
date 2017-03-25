@@ -20,6 +20,8 @@ const areacolosseo_coord = [314 256; 329 242; 359 223; 382 212; 419 204; 454 200
 const areacolosseo = ciclo_poligono(areacolosseo_coord)
 
 ##########################################################################
+## C'è un sacco di lavoro da fare
+################
 
 # Variabili globali che sarebbe meglio eliminare
 posizioni_prima = zeros(2,N)				# le posizioni dei pedoni al tempo t
