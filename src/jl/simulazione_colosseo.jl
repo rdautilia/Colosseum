@@ -3,7 +3,7 @@ using SFML
 using AnimatedPlots
 using JLD
 
-# INIZIALIZZO LE COSTANTI
+## INIZIALIZZO LE COSTANTI
 const N=5000 ::Int64				# Il numero di pedoni
 const dt = 1.0 ::Float64			# Il passo di integrazione
 const numero_iterazioni = 500		# Il numero di iterazioni della simulazione
