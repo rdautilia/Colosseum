@@ -9,14 +9,21 @@ const dt = 1.0 ::Float64			# Il passo di integrazione
 const numero_iterazioni = 500		# Il numero di iterazioni della simulazione
 const diag = sqrt(2) ::Float64		# diagonale
 const raggio = 1.8 ::Float64		# Il raggio di non sovrapposizione dei pedoni
-const dimenpedone = 1.0 ::Float64	# La dimensione del pedone	
+const dimenpedone = 2.0 ::Float64	# La dimensione del pedone	
 const scalax = 1.1 ::Float64		# lunghezza del passo di un pedone nella direzione x
 const scalay = 1.1 ::Float64		# lunghezza del passo di un pedone nella direzione y
 const areacolosseo_coord = [314 256; 329 242; 359 223; 382 212; 419 204; 454 200; 489 204; 
 523 211; 558 223; 597 245; 624 266; 659 306; 682 352; 688 403; 678 452; 651 444; 631 482; 
 600 507; 562 525; 520 533; 485 531; 446 524; 412 510; 374 490; 344 462; 314 420; 300 384; 
-300 351; 304 323; 312 299; 322 285] # L'earea interna dell'edificio
-
+300 351; 304 323; 312 299; 322 285] # L'area interna dell'edificio
+const destinazioni = [[479, 382],[352, 81],[39, 838],[5, 349]]
+############### La funzione che seleziona una destinazione a caso ###########
+function scegli_destinazione()
+               a = rand(1:size(destinazioni)[1])
+               b = destinazioni[a]
+               return b
+       end
+#########################################################################
 ############################### QUESTA È UNA PROVA 
 type Statopedone 
 		lax ::Float64
@@ -39,7 +46,7 @@ for i in 1:N
 end
 
 for i in 1:N
-	stato_dopo[i] = Statopedone(rand(-14.0:-4.0),rand(341.0:361.0),0.002,0.002,402,592)
+	stato_dopo[i] = Statopedone(rand(-14.0:-4.0),rand(341.0:361.0),0.002,0.002,scegli_destinazione()[1],scegli_destinazione()[2])
 end
 
 #################################
