@@ -32,15 +32,15 @@ end
 const STATOPEDONE_DEFAULT = Statopedone(0.1,0.1,0.1,0.1,0.1,0.1)
 const STATOPEDONE_ZERO    = Statopedone(0.0,0.0,0.0,0.0,0.0,0.0)
 
-posizioni_prima = Array(Statopedone,N)
-posizioni_dopo  = Array(Statopedone,N)
+stato_prima = Array(Statopedone,N)
+stato_dopo  = Array(Statopedone,N)
 
 for i in 1:N
-	posizioni_prima[i] = Statopedone(STATOPEDONE_ZERO)
+	stato_prima[i] = Statopedone(STATOPEDONE_ZERO)
 end
 
 for i in 1:N
-	posizioni_dopo[i] = Statopedone(STATOPEDONE_DEFAULT)
+	stato_dopo[i] = Statopedone(rand(-14.0:-4.0),rand(341.0:361.0),0.1,0.1,402,592)
 end
 
 #################################
@@ -130,24 +130,7 @@ a = sum(map(x->inpoly(lax,lay,x),w))
 end
 
 # AGGIORNAMENTO DI UNA POSIZIONE
-function aggiornamento(posingle)
-	#       dx = posingle[1] + scalax*(2*rand()-1.0) + 0.001*(180.0-posingle[1])	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
-	#       dy = posingle[2] + scalay*(2*rand()-1.0) + 0.001*(553.0-posingle[2])	#qui sarebbe meglio usare map()
-				if (inpoly(posingle[1],posingle[2],areacolosseo) == 1
-					)
-			       dx = posingle[1] + 2*scalax*(2*rand()-1.0) + 0.001*(402.0-posingle[1])	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
-			       dy = posingle[2] + 2*scalay*(2*rand()-1.0) + 0.001*(592.0-posingle[2])	#qui sarebbe meglio usare map()
-				else
-					dx = posingle[1] + scalax*(2*rand()-1.0) + 0.01*(326.0-posingle[1])	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
-			        dy = posingle[2] + scalay*(2*rand()-1.0) + 0.01*(273.0-posingle[2])	#qui sarebbe meglio usare map()
-			       
-				end
-	
-       return [dx,dy]
-end
-################################
-# AGGIORNAMENTO DI UNA POSIZIONE
-function aggiornamento_nuovo(posingle::Statopedone)
+function aggiornamento(posingle::Statopedone)
 	#       dx = posingle[1] + scalax*(2*rand()-1.0) + 0.001*(180.0-posingle[1])	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
 	#       dy = posingle[2] + scalay*(2*rand()-1.0) + 0.001*(553.0-posingle[2])	#qui sarebbe meglio usare map()
 				if (inpoly(posingle.lax,posingle.lay,areacolosseo) == 1
@@ -160,7 +143,7 @@ function aggiornamento_nuovo(posingle::Statopedone)
 			       
 				end
 	
-       return Pedone(dx,dy,posingle.lavx,posingle.lavy,posingle.ladestx,posingle.ladesty)
+       return Statopedone(dx,dy,posingle.lavx,posingle.lavy,posingle.ladestx,posingle.ladesty)
 end
 ################################
 
@@ -201,30 +184,30 @@ end
 return mod(i,2)
 end
 #####################################################
-
-# AGGORNAMENTO DEL VETTORE DELLE POSIZIONI
-function aggiornamento_totale(posizioni)
-	albero = KDTree(posizioni)
-		for i=1:2*N
-			a = aggiornamento(posizioni[:,i])
-			if (length(inrange(albero, a, raggio, true)) == 0 && esterno(a[1],a[2],edifici_coord)==0)
-				posizioni[:,i] = a
-			end
-		end
-	return posizioni
+# La funzione che legge lo stato dei pedoni e restituisce la matrice 2XN delle posizioni
+function posizioni(stato)
+       lex = []
+       ley = []
+       for i=1:N
+           push!(lex,stato[i].lax)
+       end
+       for i=1:N
+           push!(ley,stato[i].lay)
+       end
+	return transpose([lex ley])
 end
-#########################################
+##################################################
 
 # AGGORNAMENTO DEL VETTORE DELLE POSIZIONI
-function aggiornamento_totale_nuovo(posizioni)
-	albero = KDTree(posizioni)
-		for i=1:2*N
-			a = aggiornamento(posizioni[:,i])
-			if (length(inrange(albero, a, raggio, true)) == 0 && esterno(a[1],a[2],edifici_coord)==0)
-				posizioni[:,i] = a
-			end
+function aggiornamento_totale(stato)
+		albero = KDTree(posizioni(stato))
+	for i=1:N
+		a = aggiornamento(stato[i])
+		if (length(inrange(albero, [a.lax, a.lay], raggio, true)) == 0 && esterno(a.lax,a.lay,edifici_coord)==0)
+			stato[i] = a
 		end
-	return posizioni
+	end
+	return stato
 end
 #########################################
 
@@ -319,14 +302,14 @@ while isopen(window)
 
 	clear(window, SFML.Color(176,196,222))
 	draw(window, sfondo)
-	posizioni_prima = copy(posizioni_dopo)
-	aggiornamento_totale(posizioni_dopo)
-	vel = veloc(posizioni_dopo,posizioni_prima)	
-	for i =1:2*N
-			mmm = norm(vel[:,i])/diag		
-			set_position(circles[i], Vector2f(posizioni_dopo[:,i][1], posizioni_dopo[:,i][2]))
-			ll=convert(Int64,round(255*norm(vel[:,i])) % 255)
-		set_fillcolor(circles[i], colori(mmm))
+	stato_prima = copy(stato_dopo)
+	aggiornamento_totale(stato_dopo)
+#	vel = veloc(stato_dopo,stato_prima)	
+	for i =1:N
+#			mmm = norm(vel[:,i])/diag		
+			set_position(circles[i], Vector2f(stato_dopo[i].lax, stato_dopo[i].lay))
+#			ll=convert(Int64,round(255*norm(vel[:,i])) % 255)
+#		set_fillcolor(circles[i], colori(mmm))
 	end
 
 	# Set the view for drawing the movements
