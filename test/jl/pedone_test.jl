@@ -17,3 +17,15 @@ popolazione = Array(Pedone,100)
 for i in 1:100
    popolazione[i] = Pedone()
 end
+
+ function posizioni(stato)
+       lex = []
+       ley = []
+       for i=1:N
+           push!(lex,stato[i].lax)
+       end
+       for i=1:N
+           push!(ley,stato[i].lay)
+       end
+       return transpose([lex ley])
+       end

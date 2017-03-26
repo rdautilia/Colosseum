@@ -254,7 +254,23 @@ for i in 1:100
 end
 @}
 
- 
+\subsection{la funzione posizioni}
+Definiamo una funzione che prende lo stato della popolazione di $N$ individui, che è un array di Statopedone e restituisce la matrice $2\times N$ delle posizioni.
+Questa funzione sarà utile per calcolare la sovrapposizione delle posizioni con i metodi di NearestNeighbors
+@o ../../test/jl/pedone_test.jl @{
+ function posizioni(stato)
+       lex = []
+       ley = []
+       for i=1:N
+           push!(lex,stato[i].lax)
+       end
+       for i=1:N
+           push!(ley,stato[i].lay)
+       end
+       return transpose([lex ley])
+       end
+@}
+
 \bibliographystyle{plain}
 %\bibliography{}
 %ROB
