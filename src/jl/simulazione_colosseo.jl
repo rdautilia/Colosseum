@@ -3,13 +3,8 @@ using SFML
 using AnimatedPlots
 using JLD
 
-<<<<<<< HEAD
-## INIZIALIZZO LE COSTANTI
-const N=5000 ::Int64				# Il numero di pedoni
-=======
 # INIZIALIZZO LE COSTANTI
 const N=100 ::Int64				# Il numero di pedoni
->>>>>>> lavoro
 const dt = 1.0 ::Float64			# Il passo di integrazione
 const numero_iterazioni = 500		# Il numero di iterazioni della simulazione
 const diag = sqrt(2) ::Float64		# diagonale
