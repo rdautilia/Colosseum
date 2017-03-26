@@ -70,7 +70,7 @@
 \else
 \usepackage{graphicx}
 \fi
-\title{Flussi Pedonali nell'Area del Colosseo}
+\title{Flussi Pedonali nell'Area del Colosseo: Codici}
 \author{Roberto D'Autilia}
 
 \date{2017-03-21}
@@ -116,7 +116,7 @@ In questo lavoro vogliamo studiare i flussi pedonali nell'area del Colosseo nell
 I luoghi dai quali si muove la popolazione sono luscita della metro $M_1$, la Via Sacra $M_2$ e Via di San Gregorio $M_3$.
 Abbiamo due carte, la sitazione attuale ({\tt 00-FASE0.jpg}) e il progetto ({\tt 00-FASE1.jpg}).
 
-La mappa {\tt 00-FASE0.jpg} deve essere scalata per ssere adattata alla simulazione.
+La mappa {\tt 00-FASE0.jpg} deve essere scalata per essere adattata alla simulazione.
 La scala ottimale è $(0.27,0.27)$.
 
 Ora dobbiamo visualizzare le coordinate del mouse.
@@ -226,10 +226,33 @@ a = sum(map(x->inpoly(lax,lay,x),w))
 		return 0
 	end
 end
-@}
 #################################################################################################
+@}
 
+Dobbiamo ora definire lo stato dei pedoni.
+Fino a questo momento lo stato dei pedoni era rappresentato dalle sole coordinate $(x,y)$.
+Ora vogliamo invece definire un tipo (o una struttura) con le coordinate spaziali e le coordinate dell'obiettivo.
+Nell'esempio seguente introduciamo il tipo Pedone e costruiamo un array di pedoni inizializzati a {\tt PEDONE\_DEFAULT}
+@o ../../test/jl/pedone_test.jl @{
+type Pedone
+		lax ::Float64
+		lay::Float64
+		lavx::Float64
+		lavy::Float64
+		ladestx::Float64
+		ladesty::Float64
+		
+end
+const PEDONE_DEFAULT = Pedone(0.1,0.1,0.1,0.1,0.1,0.1)
 
+Pedone() = Pedone(PEDONE_DEFAULT)
+\#ESEMPIO DI UN Array di 100 pedoni
+
+popolazione = Array(Pedone,100)
+for i in 1:100
+	popolazione[i] = Pedone()
+end
+@}
 
  
 \bibliographystyle{plain}

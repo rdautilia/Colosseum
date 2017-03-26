@@ -35,11 +35,11 @@ const STATOPEDONE_ZERO    = Statopedone(0.0,0.0,0.0,0.0,0.0,0.0)
 posizioni_prima = Array(Statopedone,N)
 posizioni_dopo  = Array(Statopedone,N)
 
-for i in 1:100
+for i in 1:N
 	posizioni_prima[i] = Statopedone(STATOPEDONE_ZERO)
 end
 
-for i in 1:100
+for i in 1:N
 	posizioni_dopo[i] = Statopedone(STATOPEDONE_DEFAULT)
 end
 
