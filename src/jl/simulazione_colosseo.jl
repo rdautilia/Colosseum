@@ -28,10 +28,12 @@ type Statopedone
 		ladesty::Float64
 		
 end
+
 const STATOPEDONE_DEFAULT = Statopedone(0.1,0.1,0.1,0.1,0.1,0.1)
-const STATOPEDONE_ZERO = Statopedone(0.0,0.0,0.0,0.0,0.0,0.0)
+const STATOPEDONE_ZERO    = Statopedone(0.0,0.0,0.0,0.0,0.0,0.0)
+
 posizioni_prima = Array(Statopedone,N)
-posizioni_dopo = Array(Statopedone,N)
+posizioni_dopo  = Array(Statopedone,N)
 
 for i in 1:100
 	posizioni_prima[i] = Statopedone(STATOPEDONE_ZERO)
@@ -74,7 +76,7 @@ end
 ##############################################################
 const areacolosseo = ciclo_poligono(areacolosseo_coord) # Non capisco perché debba stare qui
 
-###### DICTIONARY POLIGONI DEGLI EDIFICI ##################
+###### DICTIONARY DEI POLIGONI DEGLI EDIFICI ##################
 const edifici_coord = Dict{String, Array}(
 "colosseoa_coord" => [373 203;390 198; 410 192; 440 190; 464 190; 487 191; 507 194; 537 202; 567 213; 594 229; 615 244; 642 272; 662 298; 678 325; 693 357; 698 356;
 698 411; 699 444; 691 459; 679 455; 687 422; 689 402; 688 387; 687 374; 684 358; 679 344; 673 330; 664 317; 657 305; 648 292; 638 280; 627 270; 615 259; 603 250;
@@ -126,30 +128,6 @@ a = sum(map(x->inpoly(lax,lay,x),w))
 		return 0 # esterno
 	end
 end
-#################################################################################################
-# LOAD THE TEXTURE FOR THE IMAGE
-texture = Texture("../../img/00-FASE0.jpg")
-set_smooth(texture, true)
-texture_size = get_size(texture)
-######################################
-
-# Create the text
-mousepos_text = RenderText()
-#set_position(mousepos_text, Vector2f(texture_size.x+40, 20))
-set_position(mousepos_text, Vector2f(940, 20))
-set_string(mousepos_text, "Mouse Position: ")
-set_color(mousepos_text, SFML.red)
-set_charactersize(mousepos_text, 18)
-##########################################
-
-
-# Create the logo sprite and add the texture to it
-sfondo = Sprite()
-set_texture(sfondo, texture)
-set_position(sfondo, Vector2f(2, 2))
-set_origin(sfondo, Vector2f(0,0)) #(texture_size.x/2, texture_size.y/2))
-scale(sfondo, Vector2f(0.27, 0.27)) #L'immagine di sfondo viene scalata
-###########################################
 
 # AGGIORNAMENTO DI UNA POSIZIONE
 function aggiornamento(posingle)
@@ -264,6 +242,31 @@ function colori(x)
 	    end
 end
 #########################################
+#################################################################################################
+# LOAD THE TEXTURE FOR THE IMAGE ##### DA METTERE IN UNA FUNZIONE
+texture = Texture("../../img/00-FASE0.jpg")
+set_smooth(texture, true)
+texture_size = get_size(texture)
+######################################
+
+# Create the text ##### DA METTERE IN UNA FUNZIONE
+mousepos_text = RenderText()
+#set_position(mousepos_text, Vector2f(texture_size.x+40, 20))
+set_position(mousepos_text, Vector2f(940, 20))
+set_string(mousepos_text, "Mouse Position: ")
+set_color(mousepos_text, SFML.red)
+set_charactersize(mousepos_text, 18)
+##########################################
+
+
+# Create the logo sprite and add the texture to it ##### DA METTERE IN UNA FUNZIONE
+sfondo = Sprite()
+set_texture(sfondo, texture)
+set_position(sfondo, Vector2f(2, 2))
+set_origin(sfondo, Vector2f(0,0)) #(texture_size.x/2, texture_size.y/2))
+scale(sfondo, Vector2f(0.27, 0.27)) #L'immagine di sfondo viene scalata
+###########################################
+
 # LEGGO IL FILE CON I DATI
 # posizioni = load("risultato_simulazione.jld")
 
