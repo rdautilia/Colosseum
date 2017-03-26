@@ -8,7 +8,6 @@ const N=100 ::Int64				# Il numero di pedoni
 const dt = 1.0 ::Float64			# Il passo di integrazione
 const numero_iterazioni = 500		# Il numero di iterazioni della simulazione
 const diag = sqrt(2) ::Float64		# diagonale
-const passo = 1.0 ::Float64			# La dimensione di un passo
 const raggio = 1.8 ::Float64		# Il raggio di non sovrapposizione dei pedoni
 const dimenpedone = 1.0 ::Float64	# La dimensione del pedone	
 const scalax = 1.1 ::Float64		# lunghezza del passo di un pedone nella direzione x
@@ -40,7 +39,7 @@ for i in 1:N
 end
 
 for i in 1:N
-	stato_dopo[i] = Statopedone(rand(-14.0:-4.0),rand(341.0:361.0),0.1,0.1,402,592)
+	stato_dopo[i] = Statopedone(rand(-14.0:-4.0),rand(341.0:361.0),0.002,0.002,402,592)
 end
 
 #################################
@@ -135,11 +134,11 @@ function aggiornamento(posingle::Statopedone)
 	#       dy = posingle[2] + scalay*(2*rand()-1.0) + 0.001*(553.0-posingle[2])	#qui sarebbe meglio usare map()
 				if (inpoly(posingle.lax,posingle.lay,areacolosseo) == 1
 					)
-			       dx = posingle.lax + 2*scalax*(2*rand()-1.0) + 0.001*(posingle.ladestx-posingle.lax)	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
-			       dy = posingle.lay + 2*scalay*(2*rand()-1.0) + 0.001*(posingle.ladesty-posingle.lay)	#qui sarebbe meglio usare map()
+			       dx = posingle.lax + 2*scalax*(2*rand()-1.0) + posingle.lavx*(posingle.ladestx-posingle.lax)	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
+			       dy = posingle.lay + 2*scalay*(2*rand()-1.0) + posingle.lavy*(posingle.ladesty-posingle.lay)	#qui sarebbe meglio usare map()
 				else
-					dx = posingle.lax + scalax*(2*rand()-1.0) + 0.01*(posingle.ladestx-posingle.lax)	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
-			        dy = posingle.lay + scalay*(2*rand()-1.0) + 0.01*(posingle.ladesty-posingle.lay)	#qui sarebbe meglio usare map()
+					dx = posingle.lax + scalax*(2*rand()-1.0) + posingle.lavx*(posingle.ladestx-posingle.lax)	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
+			        dy = posingle.lay + scalay*(2*rand()-1.0) + posingle.lavy*(posingle.ladesty-posingle.lay)	#qui sarebbe meglio usare map()
 			       
 				end
 	
