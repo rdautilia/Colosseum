@@ -8,15 +8,17 @@ const N=10000 ::Int64				# Il numero di pedoni
 const dt = 1.0 ::Float64			# Il passo di integrazione
 const numero_iterazioni = 500		# Il numero di iterazioni della simulazione
 const diag = sqrt(2) ::Float64		# diagonale
-const raggio = 1.8 ::Float64		# Il raggio di non sovrapposizione dei pedoni
+const raggio = 0.8 ::Float64		# Il raggio di non sovrapposizione dei pedoni
 const dimenpedone = 2.0 ::Float64	# La dimensione del pedone	
-const scalax = 1.0 ::Float64		# lunghezza del passo di un pedone nella direzione x
-const scalay = 1.0 ::Float64		# lunghezza del passo di un pedone nella direzione y
+const scalax = 2.0 ::Float64		# lunghezza del passo di un pedone nella direzione x
+const scalay = 2.0 ::Float64		# lunghezza del passo di un pedone nella direzione y
 const areacolosseo_coord = [314 256; 329 242; 359 223; 382 212; 419 204; 454 200; 489 204; 
 523 211; 558 223; 597 245; 624 266; 659 306; 682 352; 688 403; 678 452; 651 444; 631 482; 
 600 507; 562 525; 520 533; 485 531; 446 524; 412 510; 374 490; 344 462; 314 420; 300 384; 
 300 351; 304 323; 312 299; 322 285] # L'area interna del colosseo
 const destinazioni = [[479, 382],[352, 81],[39, 838],[5, 349]]
+const origini = [[352, 81],[39, 838],[5, 349]]
+
 ############### La funzione che seleziona una destinazione a caso ###########
 function scegli_destinazione()
                a = rand(1:size(destinazioni)[1])
@@ -24,6 +26,14 @@ function scegli_destinazione()
                return b
        end
 #########################################################################
+############### La funzione che seleziona a caso un punto di partenza ###########
+function scegli_origine()
+               a = rand(1:size(origini)[1])
+               b = origini[a]
+               return b
+       end
+#########################################################################
+
 ############################### QUESTA È UNA PROVA 
 type Statopedone 
 		lax ::Float64
@@ -47,7 +57,8 @@ end
 
 for i in 1:N
 	dest=scegli_destinazione();
-	stato_dopo[i] = Statopedone(rand(-14.0:-4.0),rand(341.0:361.0),0.02,0.02,dest[1],dest[2])
+	orig=scegli_origine();
+	stato_dopo[i] = Statopedone(rand(orig[1]-5.0 : orig[1]+5.0),rand(orig[2]-5.0 : orig[2]+5.0),0.02,0.02,dest[1],dest[2])
 end
 
 #################################
@@ -143,7 +154,7 @@ function aggiornamento(posingle::Statopedone)
 				if (inpoly(posingle.lax,posingle.lay,areacolosseo) == 1
 					)
 			       dx = posingle.lax + rand(-1.0:1.0)/scalax + posingle.lavx*(posingle.ladestx-posingle.lax)	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
-			       dy = posingle.lay + rand(-1.0:1.0)/scalaY + posingle.lavy*(posingle.ladesty-posingle.lay)	#qui sarebbe meglio usare map()
+			       dy = posingle.lay + rand(-1.0:1.0)/scalay + posingle.lavy*(posingle.ladesty-posingle.lay)	#qui sarebbe meglio usare map()
 				else
 					dx = posingle.lax + rand(-1.0:1.0)/scalax + posingle.lavx*(posingle.ladestx-posingle.lax)	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
 			        dy = posingle.lay + rand(-1.0:1.0)/scalax + posingle.lavy*(posingle.ladesty-posingle.lay)	#qui sarebbe meglio usare map()
