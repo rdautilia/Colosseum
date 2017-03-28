@@ -5,18 +5,18 @@ using JLD
 
 # INIZIALIZZO LE COSTANTI
 const N=10000 ::Int64				# Il numero di pedoni
-const dt = 1.0 ::Float64			# Il passo di integrazione
+const dt = 0.01 ::Float64			# Il passo di integrazione
 const numero_iterazioni = 500		# Il numero di iterazioni della simulazione
 const diag = sqrt(2) ::Float64		# diagonale
 const raggio = 1.8 ::Float64		# Il raggio di non sovrapposizione dei pedoni
 const dimenpedone = 1.0 ::Float64	# La dimensione del pedone	
-const scalax = 0.2 ::Float64		# lunghezza del passo di un pedone nella direzione x
-const scalay = 0.2 ::Float64		# lunghezza del passo di un pedone nella direzione y
+const scalax = 0.1 ::Float64		# lunghezza del passo di un pedone nella direzione x
+const scalay = 0.1 ::Float64		# lunghezza del passo di un pedone nella direzione y
 const areacolosseo_coord = [314 256; 329 242; 359 223; 382 212; 419 204; 454 200; 489 204; 
 523 211; 558 223; 597 245; 624 266; 659 306; 682 352; 688 403; 678 452; 651 444; 631 482; 
 600 507; 562 525; 520 533; 485 531; 446 524; 412 510; 374 490; 344 462; 314 420; 300 384; 
 300 351; 304 323; 312 299; 322 285] # L'area interna del colosseo
-const destinazioni = [[479, 382],[352, 81],[39, 838],[5, 349]]
+const destinazioni = [[479, 382],[352, 81],[39, 838],[5, 349],[666,466]]
 const origini = [[352, 81],[39, 838],[5, 349]]
 include("vincoli.jl")
 ############### La funzione che seleziona una destinazione a caso ###########
@@ -58,7 +58,7 @@ end
 for i in 1:N
 	dest=scegli_destinazione();
 	orig=scegli_origine();
-	stato_dopo[i] = Statopedone(rand(orig[1]-5.0 : orig[1]+5.0),rand(orig[2]-5.0 : orig[2]+5.0),0.02,0.02,dest[1],dest[2])
+	stato_dopo[i] = Statopedone(rand(orig[1]-3.0 : orig[1]+3.0),rand(orig[2]-3.0 : orig[2]+3.0),0.02,0.02,dest[1],dest[2])
 end
 
 #################################
