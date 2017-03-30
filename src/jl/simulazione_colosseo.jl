@@ -5,7 +5,7 @@ using JLD
 
 # INIZIALIZZO LE COSTANTI
 const N=1000 ::Int64				# Il numero di pedoni
-const dt = 1.0 ::Float64			# Il passo di integrazione
+const dt = 0.001 ::Float64			# Il passo di integrazione
 const numero_iterazioni = 500		# Il numero di iterazioni della simulazione
 const diag = sqrt(2) ::Float64		# diagonale
 const raggio = 0.1 ::Float64		# Il raggio di non sovrapposizione dei pedoni
@@ -48,19 +48,21 @@ end
 const STATOPEDONE_DEFAULT = Statopedone(0.1,0.1,0.1,0.1,0.1,0.1)
 const STATOPEDONE_ZERO    = Statopedone(0.0,0.0,0.0,0.0,0.0,0.0)
 
-stato_prima = Array(Statopedone,N)
+#stato_prima = [] questo non ci serve, lo creiamo dopo con copy
 stato_dopo  = Array(Statopedone,N)
-
-for i in 1:N
-	stato_prima[i] = Statopedone(STATOPEDONE_ZERO)
-end
+#Lo stato prima non ci serve, viene creato dpo, quando servirà
+#for i in 1:N
+#	stato_prima[i] = Statopedone(STATOPEDONE_ZERO)
+#end
 
 for i in 1:N
 	dest=scegli_destinazione();
 	orig=scegli_origine();
-	stato_dopo[i] = Statopedone(rand(orig[1]-5.0 : orig[1]+5.0),rand(orig[2]-5.0 : orig[2]+5.0),0.02,0.02,dest[1],dest[2])
+	stato_dopo[i] = Statopedone(rand(orig[1]-5.0 : orig[1]+5.0),rand(orig[2]-5.0 : orig[2]+5.0),10.02,10.02,dest[1],dest[2])
 end
 
+### Aggiunge un pedone ##########
+#aggungi_pedone(popolazione)
 #################################
 
 # Variabili globali che sarebbe meglio eliminare
@@ -127,11 +129,11 @@ function aggiornamento(posingle::Statopedone)
 	#       dy = posingle[2] + scalay*(2*rand()-1.0) + 0.001*(553.0-posingle[2])	#qui sarebbe meglio usare map()
 				if (inpoly(posingle.lax,posingle.lay,areacolosseo) == 1
 					)
-			       dx = posingle.lax + rand(-1.0:1.0)/scalax + posingle.lavx*(posingle.ladestx-posingle.lax)	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
-			       dy = posingle.lay + rand(-1.0:1.0)/scalay + posingle.lavy*(posingle.ladesty-posingle.lay)	#qui sarebbe meglio usare map()
+			       dx = posingle.lax + (rand(-1.0:1.0)/scalax + posingle.lavx*(posingle.ladestx-posingle.lax))*dt	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
+			       dy = posingle.lay + (rand(-1.0:1.0)/scalay + posingle.lavy*(posingle.ladesty-posingle.lay))*dt	#qui sarebbe meglio usare map()
 				else
-					dx = posingle.lax + rand(-1.0:1.0)/scalax + 10.0*posingle.lavx*(posingle.ladestx-posingle.lax)/norm	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
-			        dy = posingle.lay + rand(-1.0:1.0)/scalax + 10.0*posingle.lavy*(posingle.ladesty-posingle.lay)/norm	#qui sarebbe meglio usare map()
+					dx = posingle.lax + (rand(-1.0:1.0)/scalax + 10.0*posingle.lavx*(posingle.ladestx-posingle.lax)/norm)*dt	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
+			        dy = posingle.lay + (rand(-1.0:1.0)/scalax + 10.0*posingle.lavy*(posingle.ladesty-posingle.lay)/norm)*dt	#qui sarebbe meglio usare map()
 			       
 				end
 	
