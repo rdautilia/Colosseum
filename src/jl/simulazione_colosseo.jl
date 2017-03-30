@@ -12,12 +12,11 @@ const raggio = 0.1 ::Float64		# Il raggio di non sovrapposizione dei pedoni
 const dimenpedone = 2.1 ::Float64	# La dimensione del pedone	
 const scalax = 1.2 ::Float64		# lunghezza del passo di un pedone nella direzione x
 const scalay = 1.2 ::Float64		# lunghezza del passo di un pedone nella direzione y
-
 const areacolosseo_coord = [314 256; 329 242; 359 223; 382 212; 419 204; 454 200; 489 204; 
 523 211; 558 223; 597 245; 624 266; 659 306; 682 352; 688 403; 678 452; 651 444; 631 482; 
 600 507; 562 525; 520 533; 485 531; 446 524; 412 510; 374 490; 344 462; 314 420; 300 384; 
 300 351; 304 323; 312 299; 322 285] # L'area interna del colosseo
-const destinazioni = [[479, 382],[352, 81],[39, 838],[5, 349],[666,466]]
+const destinazioni = [[479, 382],[352, 81],[39, 838],[5, 349]]
 const origini = [[352, 81],[39, 838],[5, 349]]
 include("vincoli.jl")
 ############### La funzione che seleziona una destinazione a caso ###########
