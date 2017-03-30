@@ -127,8 +127,8 @@ function aggiornamento(posingle::Statopedone)
 	#       dy = posingle[2] + scalay*(2*rand()-1.0) + 0.001*(553.0-posingle[2])	#qui sarebbe meglio usare map()
 				if (inpoly(posingle.lax,posingle.lay,areacolosseo) == 1
 					)
-			       dx = posingle.lax + (rand(-1.0:1.0)/2.0)*scalax + posingle.lavx*(posingle.ladestx-posingle.lax)	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
-			       dy = posingle.lay + (rand(-1.0:1.0)/2.0)*scalay + posingle.lavy*(posingle.ladesty-posingle.lay)	#qui sarebbe meglio usare map()
+			       dx = posingle.lax + rand(-1.0:1.0)/scalax + posingle.lavx*(posingle.ladestx-posingle.lax)	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
+			       dy = posingle.lay + rand(-1.0:1.0)/scalay + posingle.lavy*(posingle.ladesty-posingle.lay)	#qui sarebbe meglio usare map()
 				else
 					dx = posingle.lax + rand(-1.0:1.0)/scalax + 10.0*posingle.lavx*(posingle.ladestx-posingle.lax)/norm	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
 			        dy = posingle.lay + rand(-1.0:1.0)/scalax + 10.0*posingle.lavy*(posingle.ladesty-posingle.lay)/norm	#qui sarebbe meglio usare map()
