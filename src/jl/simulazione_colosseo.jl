@@ -58,7 +58,7 @@ end
 for i in 1:N
 	dest=scegli_destinazione();
 	orig=scegli_origine();
-	stato_dopo[i] = Statopedone(rand(orig[1]-3.0 : orig[1]+3.0),rand(orig[2]-3.0 : orig[2]+3.0),1.002,1.002,dest[1],dest[2])
+	stato_dopo[i] = Statopedone(rand(orig[1]-5.0 : orig[1]+5.0),rand(orig[2]-5.0 : orig[2]+5.0),0.02,0.02,dest[1],dest[2])
 end
 
 #################################
