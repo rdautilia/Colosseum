@@ -46,7 +46,7 @@ type Statopedone
 end
 
 const STATOPEDONE_DEFAULT = Statopedone(0.1,0.1,0.1,0.1,0.1,0.1)
-const STATOPEDONE_ZERO    = Statopedone(0.0,0.0,0.0,0.0,0.0,0.0)
+const STATOPEDONE_ZERO    = Statopedone(-10.0,-10.0,0.0,0.0,0.0,0.0)
 
 #stato_prima = [] questo non ci serve, lo creiamo dopo con copy
 stato_dopo  = Array(Statopedone,N)
@@ -54,15 +54,28 @@ stato_dopo  = Array(Statopedone,N)
 #for i in 1:N
 #	stato_prima[i] = Statopedone(STATOPEDONE_ZERO)
 #end
-
 for i in 1:N
 	dest=scegli_destinazione();
 	orig=scegli_origine();
-	stato_dopo[i] = Statopedone(rand(orig[1]-5.0 : orig[1]+5.0),rand(orig[2]-5.0 : orig[2]+5.0),10.02,10.02,dest[1],dest[2])
+	stato_dopo[i] = Statopedone(STATOPEDONE_ZERO)
 end
+###ROB> for i in 1:N
+###ROB> 	dest=scegli_destinazione();
+###ROB> 	orig=scegli_origine();
+###ROB> 	stato_dopo[i] = Statopedone(rand(orig[1]-5.0 : orig[1]+5.0),rand(orig[2]-5.0 : orig[2]+5.0),10.02,10.02,dest[1],dest[2])
+###ROB> end
+
 
 ### Aggiunge un pedone ##########
-#aggungi_pedone(popolazione)
+function aggiungi_pedone()
+a = rand(1:N)
+dest=scegli_destinazione();
+orig=scegli_origine();
+	if stato_dopo[a] == STATOPEDONE_ZERO && rand() < 0.5
+		stato_dopo[a] = Statopedone(rand(orig[1]-5.0 : orig[1]+5.0),rand(orig[2]-5.0 : orig[2]+5.0),10.02,10.02,dest[1],dest[2])
+	end
+end
+	
 #################################
 
 # Variabili globali che sarebbe meglio eliminare
@@ -296,6 +309,7 @@ while isopen(window)
 
 	clear(window, SFML.Color(176,196,222))
 	draw(window, sfondo)
+	aggiungi_pedone()
 	stato_prima = copy(stato_dopo)
 	aggiornamento_totale(stato_dopo)
 #	vel = veloc(stato_dopo,stato_prima)	
