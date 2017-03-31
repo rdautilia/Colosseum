@@ -1,4 +1,5 @@
-type Pedone
+############################### QUESTA È UNA PROVA 
+type Statopedone 
 		lax ::Float64
 		lay::Float64
 		lavx::Float64
@@ -7,12 +8,21 @@ type Pedone
 		ladesty::Float64
 		
 end
-const PEDONE_DEFAULT = Pedone(0.1,0.1,0.1,0.1,0.1,0.1)
 
-Pedone() = Pedone(PEDONE_DEFAULT)
-#ESEMPIO DI UN Array di 100 pedoni
+const STATOPEDONE_DEFAULT = Statopedone(0.1,0.1,0.1,0.1,0.1,0.1)
+const STATOPEDONE_ZERO    = Statopedone(-10.0,-10.0,0.0,0.0,0.0,0.0)
 
-popolazione = Array(Pedone,100)
-for i in 1:100
-	popolazione[i] = Pedone()
+
+
+
+### Aggiunge un pedone ##########
+function aggiungi_pedone()
+a = rand(1:N)
+dest = scegli_destinazione();
+orig = scegli_origine();
+	if stato_dopo[a] == STATOPEDONE_ZERO && rand() < 0.5 && dest != orig
+		stato_dopo[a] = Statopedone(rand(orig[1]-5.0 : orig[1]+5.0),rand(orig[2]-5.0 : orig[2]+5.0),10.02,10.02,dest[1],dest[2])
+	end
 end
+	
+#################################

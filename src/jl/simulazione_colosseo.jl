@@ -3,6 +3,9 @@ using SFML
 using AnimatedPlots
 using JLD
 
+# INCLUDE LE NOSTRE LIBRERIE E I NOSTRI DATI
+include("vincoli.jl")
+include("pedone.jl")
 # INIZIALIZZO LE COSTANTI
 const N=1000 ::Int64				# Il numero di pedoni
 const dt = 0.01 ::Float64			# Il passo di integrazione
@@ -18,7 +21,6 @@ const areacolosseo_coord = [314 256; 329 242; 359 223; 382 212; 419 204; 454 200
 300 351; 304 323; 312 299; 322 285] # L'area interna del colosseo
 const destinazioni = [[479, 382],[352, 81],[39, 838],[5, 349]]
 const origini = [[352, 81],[39, 838],[5, 349]]
-include("vincoli.jl")
 
 ############### La funzione che seleziona a caso un punto di partenza ###########
 function scegli_origine()
@@ -34,20 +36,6 @@ function scegli_destinazione()
                return b
        end
 #########################################################################
-############################### QUESTA È UNA PROVA 
-type Statopedone 
-		lax ::Float64
-		lay::Float64
-		lavx::Float64
-		lavy::Float64
-		ladestx::Float64
-		ladesty::Float64
-		
-end
-
-const STATOPEDONE_DEFAULT = Statopedone(0.1,0.1,0.1,0.1,0.1,0.1)
-const STATOPEDONE_ZERO    = Statopedone(-10.0,-10.0,0.0,0.0,0.0,0.0)
-
 #stato_prima = [] questo non ci serve, lo creiamo dopo con copy
 stato_dopo  = Array(Statopedone,N)
 #Lo stato prima non ci serve, viene creato dpo, quando servirà
@@ -64,20 +52,6 @@ end
 ###ROB> 	orig=scegli_origine();
 ###ROB> 	stato_dopo[i] = Statopedone(rand(orig[1]-5.0 : orig[1]+5.0),rand(orig[2]-5.0 : orig[2]+5.0),10.02,10.02,dest[1],dest[2])
 ###ROB> end
-
-
-### Aggiunge un pedone ##########
-function aggiungi_pedone()
-a = rand(1:N)
-dest = scegli_destinazione();
-orig = scegli_origine();
-	if stato_dopo[a] == STATOPEDONE_ZERO && rand() < 0.5 && dest != orig
-		stato_dopo[a] = Statopedone(rand(orig[1]-5.0 : orig[1]+5.0),rand(orig[2]-5.0 : orig[2]+5.0),10.02,10.02,dest[1],dest[2])
-	end
-end
-	
-#################################
-
 # Variabili globali che sarebbe meglio eliminare
 ####ROB> posizioni_prima = zeros(2,N)				# le posizioni dei pedoni al tempo t
 ####ROB> altre = [rand(339.0:362.0,1,N);rand(75.0:93.0,1,N)] # altre posizioni
