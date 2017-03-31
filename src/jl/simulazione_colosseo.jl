@@ -111,7 +111,9 @@ end
 
 # AGGIORNAMENTO DI UNA POSIZIONE A VELOCITA' COSTANTE
 function aggiornamento(posingle::Statopedone)
-	norm =sqrt((posingle.ladestx-posingle.lax)^2+(posingle.ladesty-posingle.lay)^2)
+	dx::Float64 =0.0
+	dy::Float64 =0.0
+#	norm =sqrt((posingle.ladestx-posingle.lax)^2+(posingle.ladesty-posingle.lay)^2)
 	#       dx = posingle[1] + scalax*(2*rand()-1.0) + 0.001*(180.0-posingle[1])	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
 	#       dy = posingle[2] + scalay*(2*rand()-1.0) + 0.001*(553.0-posingle[2])	#qui sarebbe meglio usare map()
 				if (inpoly(posingle.lax,posingle.lay,areacolosseo) == 1
@@ -119,12 +121,17 @@ function aggiornamento(posingle::Statopedone)
 			       dx = posingle.lax + (rand(-1.0:1.0)/scalax + posingle.lavx*(posingle.ladestx-posingle.lax))*dt	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
 			       dy = posingle.lay + (rand(-1.0:1.0)/scalay + posingle.lavy*(posingle.ladesty-posingle.lay))*dt	#qui sarebbe meglio usare map()
 				else
-					dx = posingle.lax + (rand(-1.0:1.0)/scalax + 10.0*posingle.lavx*(posingle.ladestx-posingle.lax)/norm)*dt	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
-			        dy = posingle.lay + (rand(-1.0:1.0)/scalax + 10.0*posingle.lavy*(posingle.ladesty-posingle.lay)/norm)*dt	#qui sarebbe meglio usare map()
+#					dx = posingle.lax + (rand(-1.0:1.0)/scalax + 10.0*posingle.lavx*(posingle.ladestx-posingle.lax)/norm)*dt
+#			        dy = posingle.lay + (rand(-1.0:1.0)/scalax + 10.0*posingle.lavy*(posingle.ladesty-posingle.lay)/norm)*dt
+						dx = posingle.lax + rand(-1.0:1.0)/scalax + 10.0*posingle.lavx*versore_principale(posingle)[1]*dt
+						dy = posingle.lay + rand(-1.0:1.0)/scalax + 10.0*posingle.lavy*versore_principale(posingle)[2]*dt
 			       
 				end
-	
-       return Statopedone(dx,dy,posingle.lavx,posingle.lavy,posingle.ladestx,posingle.ladesty)
+		if posingle == STATOPEDONE_ZERO
+			return posingle
+		else
+       		return Statopedone(dx,dy,posingle.lavx,posingle.lavy,posingle.ladestx,posingle.ladesty)
+		end
 end
 ################################
 
