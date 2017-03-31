@@ -13,8 +13,8 @@ const numero_iterazioni = 500		# Il numero di iterazioni della simulazione
 const diag = sqrt(2) ::Float64		# diagonale
 const raggio = 0.5 ::Float64		# Il raggio di non sovrapposizione dei pedoni
 const dimenpedone = 2.1 ::Float64	# La dimensione del pedone	
-const scalax = 1.2 ::Float64		# lunghezza del passo di un pedone nella direzione x
-const scalay = 1.2 ::Float64		# lunghezza del passo di un pedone nella direzione y
+const scalax = 0.02 ::Float64		# lunghezza del passo di un pedone nella direzione x
+const scalay = 0.02 ::Float64		# lunghezza del passo di un pedone nella direzione y
 const areacolosseo_coord = [314 256; 329 242; 359 223; 382 212; 419 204; 454 200; 489 204; 
 523 211; 558 223; 597 245; 624 266; 659 306; 682 352; 688 403; 678 452; 651 444; 631 482; 
 600 507; 562 525; 520 533; 485 531; 446 524; 412 510; 374 490; 344 462; 314 420; 300 384; 
@@ -111,26 +111,30 @@ end
 
 # AGGIORNAMENTO DI UNA POSIZIONE A VELOCITA' COSTANTE
 function aggiornamento(posingle::Statopedone)
-	dx::Float64 =0.0
-	dy::Float64 =0.0
+	px::Float64 = 0.0
+	py::Float64 = 0.0
+	vx::Float64 = 0.0
+	vy::Float64 = 0.0
 #	norm =sqrt((posingle.ladestx-posingle.lax)^2+(posingle.ladesty-posingle.lay)^2)
 	#       dx = posingle[1] + scalax*(2*rand()-1.0) + 0.001*(180.0-posingle[1])	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
 	#       dy = posingle[2] + scalay*(2*rand()-1.0) + 0.001*(553.0-posingle[2])	#qui sarebbe meglio usare map()
 				if (inpoly(posingle.lax,posingle.lay,areacolosseo) == 1
 					)
-			       dx = posingle.lax + (rand(-1.0:1.0)/scalax + posingle.lavx*(posingle.ladestx-posingle.lax))*dt	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
-			       dy = posingle.lay + (rand(-1.0:1.0)/scalay + posingle.lavy*(posingle.ladesty-posingle.lay))*dt	#qui sarebbe meglio usare map()
+			       px = posingle.lax + (rand(-1.0:1.0)/scalax + posingle.lavx*(posingle.ladestx-posingle.lax))*dt	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
+			       py = posingle.lay + (rand(-1.0:1.0)/scalay + posingle.lavy*(posingle.ladesty-posingle.lay))*dt	#qui sarebbe meglio usare map()
 				else
 #					dx = posingle.lax + (rand(-1.0:1.0)/scalax + 10.0*posingle.lavx*(posingle.ladestx-posingle.lax)/norm)*dt
 #			        dy = posingle.lay + (rand(-1.0:1.0)/scalax + 10.0*posingle.lavy*(posingle.ladesty-posingle.lay)/norm)*dt
-						dx = posingle.lax + rand(-1.0:1.0)/scalax + 10.0*posingle.lavx*versore_complessivo(posingle,popolazione_attiva(stato_dopo))[1]*dt
-						dy = posingle.lay + rand(-1.0:1.0)/scalax + 10.0*posingle.lavy*versore_complessivo(posingle,popolazione_attiva(stato_dopo))[2]*dt
+						vx = posingle.lavx*versore_complessivo(posingle,popolazione_attiva(stato_dopo))[1]
+						vy = posingle.lavy*versore_complessivo(posingle,popolazione_attiva(stato_dopo))[2]
+						px = posingle.lax  + 10*vx*dt + rand(-1.0:1.0)*scalax
+						py = posingle.lay  + 10*vy*dt + rand(-1.0:1.0)*scalay
 			       
 				end
 		if posingle == STATOPEDONE_ZERO
 			return posingle
 		else
-       		return Statopedone(dx,dy,posingle.lavx,posingle.lavy,posingle.ladestx,posingle.ladesty)
+       		return Statopedone(px,py,vx,vy,posingle.ladestx,posingle.ladesty)
 		end
 end
 ################################
