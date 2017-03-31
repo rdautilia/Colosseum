@@ -1,4 +1,6 @@
-############################### QUESTA È UNA PROVA 
+const elle = 4.5 ::Float64		# Il raggio di non sovrapposizione dei pedoni
+
+############################### QUESTA È IL TIPO STATOPEDONE
 type Statopedone 
 		lax ::Float64
 		lay::Float64
@@ -9,7 +11,7 @@ type Statopedone
 		
 end
 
-const STATOPEDONE_DEFAULT = Statopedone(0.1,0.1,2.0,2.0,0.1,0.1)
+const STATOPEDONE_DEFAULT = Statopedone(0.1,0.1,0.2,0.2,0.1,0.1)
 const STATOPEDONE_ZERO    = Statopedone(-10.0,-10.0,0.0,0.0,0.0,0.0)
 
 ## Calcola il versore della velocità del pedone, quindi della direzione in cui sta andando
@@ -55,7 +57,7 @@ end
 
 #### Funzione R di [TCS]
 function laRTCS(s::Float64)
-	a = 5.0
+	a = 1.0
 	l = 1.5
 	D = 0.1
 	return a*exp((l-s)/D)
@@ -87,11 +89,11 @@ function versore_complessivo(pedi::Statopedone, popolazione::Array{Statopedone})
 end
 #######################
 ## Costruisce l'array dei pedoni che si trovano nel rettangolo di fronte al pedone (vedi [TCS])
-function ilJSet(ped::Statopedone, popolazione::Array{Statopedone},l::Float64)
+function ilJSet(ped::Statopedone, popolazione::Array{Statopedone})
 	a=[]
 	for i in 1:length(popolazione)
 		if (sum(versore(ped) .* versore_reciproco(ped,popolazione[i])) <= 0.0  
-			&& abs(sum(versore_ortogonale(ped) .* versore_reciproco(ped,popolazione[i])))<=l/distanza_pedoni(ped,popolazione[i])
+			&& abs(sum(versore_ortogonale(ped) .* versore_reciproco(ped,popolazione[i])))<=elle/distanza_pedoni(ped,popolazione[i])
 			&& distanza_pedoni(ped,popolazione[i])>0.0)
 		push!(a,distanza_pedoni(ped,popolazione[i]))
 		end
@@ -101,9 +103,9 @@ end
 ###################
 ## calcola la distanza con il più vicono secondo [TCS]
 function pedone_piuvicino(ped::Statopedone, popolazione::Array{Statopedone},l::Float64)
-	a = ilJSet(ped, popolazione, l)
+	a = ilJSet(ped, popolazione)
 	if isempty(a)
-		return 10.0
+		return 5.0
 	else
 		return minimum(a)
 	end	
@@ -112,7 +114,7 @@ end
 ## la velocità del pedone secondo il modello [TCS]
 function velocitaTCS(ped::Statopedone,popolazione::Array{Statopedone},l::Float64, v0::Float64, laT::Float64 )
 	s = pedone_piuvicino(ped,popolazione,l)
-	a = min(v0,max(0,(s-l)/laT))
+	a = min(v0,max(0.0,(s-l)/laT))
 		return a
 end
 #####################

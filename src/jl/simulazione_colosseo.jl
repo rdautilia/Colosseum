@@ -7,11 +7,10 @@ using JLD
 include("vincoli.jl")
 include("pedone.jl")
 # INIZIALIZZO LE COSTANTI
-const N=1000 ::Int64				# Il numero di pedoni
-const dt = 0.01 ::Float64			# Il passo di integrazione
+const N=20 ::Int64				# Il numero di pedoni
+const dt = 0.1 ::Float64			# Il passo di integrazione
 const diag = sqrt(2) ::Float64		# diagonale
-const raggio = 1.5 ::Float64		# Il raggio di non sovrapposizione dei pedoni
-const dimenpedone = 2.1 ::Float64	# La dimensione del pedone	
+const dimenpedone = 2.1 ::Float64	# La dimensione del disegno pedone	
 const scalax = 0.0 ::Float64		# lunghezza del passo di un pedone nella direzione x
 const scalay = 0.0 ::Float64		# lunghezza del passo di un pedone nella direzione y
 const areacolosseo_coord = [314 256; 329 242; 359 223; 382 212; 419 204; 454 200; 489 204; 
@@ -114,23 +113,13 @@ function aggiornamento(posingle::Statopedone)
 	py::Float64 = 0.0
 	vx::Float64 = 0.0
 	vy::Float64 = 0.0
-#	norm =sqrt((posingle.ladestx-posingle.lax)^2+(posingle.ladesty-posingle.lay)^2)
-	#       dx = posingle[1] + scalax*(2*rand()-1.0) + 0.001*(180.0-posingle[1])	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
-	#       dy = posingle[2] + scalay*(2*rand()-1.0) + 0.001*(553.0-posingle[2])	#qui sarebbe meglio usare map()
-				if (inpoly(posingle.lax,posingle.lay,areacolosseo) == 1
-					)
-			       px = posingle.lax + (rand(-1.0:1.0)/scalax + posingle.lavx*(posingle.ladestx-posingle.lax))*dt	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
-			       py = posingle.lay + (rand(-1.0:1.0)/scalay + posingle.lavy*(posingle.ladesty-posingle.lay))*dt	#qui sarebbe meglio usare map()
-				else
-#					dx = posingle.lax + (rand(-1.0:1.0)/scalax + 10.0*posingle.lavx*(posingle.ladestx-posingle.lax)/norm)*dt
-#			        dy = posingle.lay + (rand(-1.0:1.0)/scalax + 10.0*posingle.lavy*(posingle.ladesty-posingle.lay)/norm)*dt
-						lav =velocitaTCS(posingle,popolazione_attiva(stato_dopo),raggio,10.2,1.0)
+#						lav =velocitaTCS(posingle,popolazione_attiva(stato_dopo), elle,5.2,1.0)
+						lav = 5.5
 						vx = lav*versore_complessivo(posingle,popolazione_attiva(stato_dopo))[1]
 						vy = lav*versore_complessivo(posingle,popolazione_attiva(stato_dopo))[2]
-						px = posingle.lax  + 10*vx*dt + rand(-1.0:1.0)*scalax
-						py = posingle.lay  + 10*vy*dt + rand(-1.0:1.0)*scalay
-			       
-				end
+						px = posingle.lax  + vx*dt + (rand(-1.0:1.0)/2.0)*scalax
+						py = posingle.lay  + vy*dt + (rand(-1.0:1.0)/2.0)*scalay
+									       
 		if posingle == STATOPEDONE_ZERO
 			return posingle
 		else
