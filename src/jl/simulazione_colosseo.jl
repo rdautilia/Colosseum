@@ -5,10 +5,10 @@ using JLD
 
 # INIZIALIZZO LE COSTANTI
 const N=1000 ::Int64				# Il numero di pedoni
-const dt = 0.001 ::Float64			# Il passo di integrazione
+const dt = 0.01 ::Float64			# Il passo di integrazione
 const numero_iterazioni = 500		# Il numero di iterazioni della simulazione
 const diag = sqrt(2) ::Float64		# diagonale
-const raggio = 0.1 ::Float64		# Il raggio di non sovrapposizione dei pedoni
+const raggio = 0.5 ::Float64		# Il raggio di non sovrapposizione dei pedoni
 const dimenpedone = 2.1 ::Float64	# La dimensione del pedone	
 const scalax = 1.2 ::Float64		# lunghezza del passo di un pedone nella direzione x
 const scalay = 1.2 ::Float64		# lunghezza del passo di un pedone nella direzione y
@@ -19,13 +19,7 @@ const areacolosseo_coord = [314 256; 329 242; 359 223; 382 212; 419 204; 454 200
 const destinazioni = [[479, 382],[352, 81],[39, 838],[5, 349]]
 const origini = [[352, 81],[39, 838],[5, 349]]
 include("vincoli.jl")
-############### La funzione che seleziona una destinazione a caso ###########
-function scegli_destinazione()
-               a = rand(1:size(destinazioni)[1])
-               b = destinazioni[a]
-               return b
-       end
-#########################################################################
+
 ############### La funzione che seleziona a caso un punto di partenza ###########
 function scegli_origine()
                a = rand(1:size(origini)[1])
@@ -33,7 +27,13 @@ function scegli_origine()
                return b
        end
 #########################################################################
-
+############### La funzione che seleziona una destinazione a caso ###########
+function scegli_destinazione()
+               a = rand(1:size(destinazioni)[1])
+               b = destinazioni[a]
+               return b
+       end
+#########################################################################
 ############################### QUESTA È UNA PROVA 
 type Statopedone 
 		lax ::Float64
@@ -69,9 +69,9 @@ end
 ### Aggiunge un pedone ##########
 function aggiungi_pedone()
 a = rand(1:N)
-dest=scegli_destinazione();
-orig=scegli_origine();
-	if stato_dopo[a] == STATOPEDONE_ZERO && rand() < 0.5
+dest = scegli_destinazione();
+orig = scegli_origine();
+	if stato_dopo[a] == STATOPEDONE_ZERO && rand() < 0.5 && dest != orig
 		stato_dopo[a] = Statopedone(rand(orig[1]-5.0 : orig[1]+5.0),rand(orig[2]-5.0 : orig[2]+5.0),10.02,10.02,dest[1],dest[2])
 	end
 end
