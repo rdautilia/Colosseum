@@ -9,7 +9,7 @@ type Statopedone
 		
 end
 
-const STATOPEDONE_DEFAULT = Statopedone(0.1,0.1,0.1,0.1,0.1,0.1)
+const STATOPEDONE_DEFAULT = Statopedone(0.1,0.1,2.0,2.0,0.1,0.1)
 const STATOPEDONE_ZERO    = Statopedone(-10.0,-10.0,0.0,0.0,0.0,0.0)
 
 ## Calcola il versore della velocità del pedone, quindi della direzione in cui sta andando
@@ -56,7 +56,7 @@ end
 #### Funzione R di [TCS]
 function laRTCS(s::Float64)
 	a = 5.0
-	l = 0.3
+	l = 1.5
 	D = 0.1
 	return a*exp((l-s)/D)
 end
@@ -78,8 +78,8 @@ function versore_complessivo(pedi::Statopedone, popolazione::Array{Statopedone})
 	ex = 0.0
 	ey = 0.0
 	for i in 1:length(popolazione)
-		ex = ex + versore_reciproco(pedi, popolazione[i])[1]*laRTCS(distanza_pedoni(pedi,popolazione[i]))
-		ey = ey + versore_reciproco(pedi, popolazione[i])[2]*laRTCS(distanza_pedoni(pedi,popolazione[i]))
+		ex = ex + versore_reciproco(pedi, popolazione[i])[1]*laRTCS(pedone_piuvicino(pedi,popolazione_attiva(popolazione),1.5))
+		ey = ey + versore_reciproco(pedi, popolazione[i])[2]*laRTCS(pedone_piuvicino(pedi,popolazione_attiva(popolazione),1.5))
 	end
 	ex = ex + versore_principale(pedi)[1]
 	ey = ey + versore_principale(pedi)[2]
@@ -98,6 +98,24 @@ function ilJSet(ped::Statopedone, popolazione::Array{Statopedone},l::Float64)
 	end
 	return a
 end
+###################
+## calcola la distanza con il più vicono secondo [TCS]
+function pedone_piuvicino(ped::Statopedone, popolazione::Array{Statopedone},l::Float64)
+	a = ilJSet(ped, popolazione, l)
+	if isempty(a)
+		return 10.0
+	else
+		return minimum(a)
+	end	
+end
+###################
+## la velocità del pedone secondo il modello [TCS]
+function velocitaTCS(ped::Statopedone,popolazione::Array{Statopedone},l::Float64, v0::Float64, laT::Float64 )
+	s = pedone_piuvicino(ped,popolazione,l)
+	a = min(v0,max(0,(s-l)/laT))
+		return a
+end
+#####################
 ### Aggiunge un pedone ##########
 function aggiungi_pedone()
 a = rand(1:N)

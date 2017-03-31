@@ -9,12 +9,11 @@ include("pedone.jl")
 # INIZIALIZZO LE COSTANTI
 const N=1000 ::Int64				# Il numero di pedoni
 const dt = 0.01 ::Float64			# Il passo di integrazione
-const numero_iterazioni = 500		# Il numero di iterazioni della simulazione
 const diag = sqrt(2) ::Float64		# diagonale
-const raggio = 0.5 ::Float64		# Il raggio di non sovrapposizione dei pedoni
+const raggio = 1.5 ::Float64		# Il raggio di non sovrapposizione dei pedoni
 const dimenpedone = 2.1 ::Float64	# La dimensione del pedone	
-const scalax = 0.02 ::Float64		# lunghezza del passo di un pedone nella direzione x
-const scalay = 0.02 ::Float64		# lunghezza del passo di un pedone nella direzione y
+const scalax = 0.0 ::Float64		# lunghezza del passo di un pedone nella direzione x
+const scalay = 0.0 ::Float64		# lunghezza del passo di un pedone nella direzione y
 const areacolosseo_coord = [314 256; 329 242; 359 223; 382 212; 419 204; 454 200; 489 204; 
 523 211; 558 223; 597 245; 624 266; 659 306; 682 352; 688 403; 678 452; 651 444; 631 482; 
 600 507; 562 525; 520 533; 485 531; 446 524; 412 510; 374 490; 344 462; 314 420; 300 384; 
@@ -125,8 +124,9 @@ function aggiornamento(posingle::Statopedone)
 				else
 #					dx = posingle.lax + (rand(-1.0:1.0)/scalax + 10.0*posingle.lavx*(posingle.ladestx-posingle.lax)/norm)*dt
 #			        dy = posingle.lay + (rand(-1.0:1.0)/scalax + 10.0*posingle.lavy*(posingle.ladesty-posingle.lay)/norm)*dt
-						vx = posingle.lavx*versore_complessivo(posingle,popolazione_attiva(stato_dopo))[1]
-						vy = posingle.lavy*versore_complessivo(posingle,popolazione_attiva(stato_dopo))[2]
+						lav =velocitaTCS(posingle,popolazione_attiva(stato_dopo),raggio,10.2,1.0)
+						vx = lav*versore_complessivo(posingle,popolazione_attiva(stato_dopo))[1]
+						vy = lav*versore_complessivo(posingle,popolazione_attiva(stato_dopo))[2]
 						px = posingle.lax  + 10*vx*dt + rand(-1.0:1.0)*scalax
 						py = posingle.lay  + 10*vy*dt + rand(-1.0:1.0)*scalay
 			       
