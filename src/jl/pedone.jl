@@ -12,6 +12,24 @@ end
 const STATOPEDONE_DEFAULT = Statopedone(0.1,0.1,0.1,0.1,0.1,0.1)
 const STATOPEDONE_ZERO    = Statopedone(-10.0,-10.0,0.0,0.0,0.0,0.0)
 
+## Calcola il versore della velocità del pedone, quindi della direzione in cui sta andando
+function versore(ped::Statopedone)
+	norm = sqrt(ped.lavx^2+ped.lavy^2)
+	ex=(ped.lavx)/norm
+	ey=(ped.lavy)/norm
+	return  [ex ey]
+end 
+#####################
+## Calcola il versore ortogonale al vettore velocità del pedone
+function versore_ortogonale(ped::Statopedone)
+	vx::Float64 = ped.lavy	
+	vy::Float64 = -ped.lavx
+	norm = sqrt(vx^2+vy^2)
+	ex=(vx)/norm
+	ey=(vy)/norm
+	return  [ex ey]
+end 
+#####################
 ## Calcola il versore principale, dalla posizione del pedone alla destinazione
 function versore_principale(pedone::Statopedone)
 	norm = sqrt((pedone.ladestx-pedone.lax)^2+(pedone.ladesty-pedone.lay)^2)
@@ -68,6 +86,18 @@ function versore_complessivo(pedi::Statopedone, popolazione::Array{Statopedone})
 	return [ex ey]
 end
 #######################
+## Costruisce l'array dei pedoni che si trovano nel rettangolo di fronte al pedone (vedi [TCS])
+function ilJSet(ped::Statopedone, popolazione::Array{Statopedone},l::Float64)
+	a=[]
+	for i in 1:length(popolazione)
+		if (sum(versore(ped) .* versore_reciproco(ped,popolazione[i])) <= 0.0  
+			&& abs(sum(versore_ortogonale(ped) .* versore_reciproco(ped,popolazione[i])))<=l/distanza_pedoni(ped,popolazione[i])
+			&& distanza_pedoni(ped,popolazione[i])>0.0)
+		push!(a,distanza_pedoni(ped,popolazione[i]))
+		end
+	end
+	return a
+end
 ### Aggiunge un pedone ##########
 function aggiungi_pedone()
 a = rand(1:N)

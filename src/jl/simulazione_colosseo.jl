@@ -195,9 +195,9 @@ function aggiornamento_totale(stato)
 		albero = KDTree(posizioni(stato))
 	for i=1:N
 		a = aggiornamento(stato[i])
-		if (length(inrange(albero, [a.lax, a.lay], raggio, true)) == 0 && esterno(a.lax,a.lay,edifici_coord)==0)
+#		if (length(inrange(albero, [a.lax, a.lay], raggio, true)) == 0 && esterno(a.lax,a.lay,edifici_coord)==0)
 			stato[i] = a
-		end
+#		end
 	end
 	return stato
 end
