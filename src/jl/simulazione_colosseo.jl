@@ -123,8 +123,8 @@ function aggiornamento(posingle::Statopedone)
 				else
 #					dx = posingle.lax + (rand(-1.0:1.0)/scalax + 10.0*posingle.lavx*(posingle.ladestx-posingle.lax)/norm)*dt
 #			        dy = posingle.lay + (rand(-1.0:1.0)/scalax + 10.0*posingle.lavy*(posingle.ladesty-posingle.lay)/norm)*dt
-						dx = posingle.lax + rand(-1.0:1.0)/scalax + 10.0*posingle.lavx*versore_principale(posingle)[1]*dt
-						dy = posingle.lay + rand(-1.0:1.0)/scalax + 10.0*posingle.lavy*versore_principale(posingle)[2]*dt
+						dx = posingle.lax + rand(-1.0:1.0)/scalax + 10.0*posingle.lavx*versore_complessivo(posingle,popolazione_attiva(stato_dopo))[1]*dt
+						dy = posingle.lay + rand(-1.0:1.0)/scalax + 10.0*posingle.lavy*versore_complessivo(posingle,popolazione_attiva(stato_dopo))[2]*dt
 			       
 				end
 		if posingle == STATOPEDONE_ZERO
