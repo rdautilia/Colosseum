@@ -4,7 +4,7 @@ using AnimatedPlots
 using JLD
 
 # INIZIALIZZO LE COSTANTI
-const N=1000 ::Int64				# Il numero di pedoni
+const N=3000 ::Int64				# Il numero di pedoni
 const dt = 0.01 ::Float64			# Il passo di integrazione
 const numero_iterazioni = 500		# Il numero di iterazioni della simulazione
 const diag = sqrt(2) ::Float64		# diagonale
