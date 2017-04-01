@@ -1,4 +1,7 @@
-const elle = 0.0 ::Float64		# Il raggio di non sovrapposizione dei pedoni
+const elle = 0.5 ::Float64		# Il raggio di non sovrapposizione dei pedoni
+const ledestinazioni = Dict{Array, Array}(
+[354 187] => [[595 121], [250 265]]
+)
 
 ############################### QUESTA È IL TIPO STATOPEDONE
 type Statopedone 
@@ -118,6 +121,20 @@ function velocitaTCS(ped::Statopedone,popolazione::Array{Statopedone},l::Float64
 		return a
 end
 #####################
+##### calcola la distanza dalla destinazione
+function distanza_destinazione(ped::Statopedone)
+	a = sqrt((ped.lax-ped.ladestx)^2+(ped.lay-ped.ladesty)^2)
+	return a
+end
+##### scegli la prossima destinazione
+function prossima_destinazione(ped::Statopedone)
+	if in([ped.ladestx ped.ladesty],keys(ledestinazioni))
+		dest = ledestinazioni[[ped.ladestx ped.ladesty]]
+	else
+		dest =[[ped.ladestx ped.ladesty]]
+	end
+		return dest[rand(1:length(dest))]
+end
 ### Aggiunge un pedone ##########
 function aggiungi_pedone()
 a = rand(1:N)

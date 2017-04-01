@@ -7,20 +7,21 @@ using JLD
 include("vincoli.jl")
 include("pedone.jl")
 # INIZIALIZZO LE COSTANTI
-const N=3000 ::Int64				# Il numero di pedoni
+const N=500 ::Int64				# Il numero di pedoni
 const dt = 0.01 ::Float64			# Il passo di integrazione
 const diag = sqrt(2) ::Float64		# diagonale
-const dimenpedone = 1.1 ::Float64	# La dimensione del disegno pedone	
-const scalax = 1.5 ::Float64		# lunghezza del passo di un pedone nella direzione x
-const scalay = 1.5 ::Float64		# lunghezza del passo di un pedone nella direzione y
+const dimenpedone = 2.1 ::Float64	# La dimensione del disegno pedone	
+const scalax = 1.2 ::Float64		# lunghezza del passo di un pedone nella direzione x
+const scalay = 1.2 ::Float64		# lunghezza del passo di un pedone nella direzione y
 const areacolosseo_coord = [314 256; 329 242; 359 223; 382 212; 419 204; 454 200; 489 204; 
 523 211; 558 223; 597 245; 624 266; 659 306; 682 352; 688 403; 678 452; 651 444; 631 482; 
 600 507; 562 525; 520 533; 485 531; 446 524; 412 510; 374 490; 344 462; 314 420; 300 384; 
 300 351; 304 323; 312 299; 322 285] # L'area interna del colosseo
 #const destinazioni = [[479, 382],[352, 81],[39, 838],[5, 349]]
-const destinazioni = [[479, 382],[352, 81],[39, 838],[5, 349]]
+const destinazioni = [[354, 187]]
 
-const origini = [[352, 81],[39, 838],[5, 349]]
+#const origini = [[352, 81],[39, 838],[5, 349]]
+const origini = [[352, 81]]
 
 ############### La funzione che seleziona a caso un punto di partenza ###########
 function scegli_origine()
@@ -122,7 +123,11 @@ function aggiornamento(posingle::Statopedone)
 #						vy = lav*versore_complessivo(posingle,popolazione_attiva(stato_dopo))[2]
 						px = posingle.lax  + posingle.lavx*versore_principale(posingle)[1]*dt + (rand(-1.0:1.0)/2.0)*scalax*versore_principale(posingle)[1]
 						py = posingle.lay  + posingle.lavy*versore_principale(posingle)[2]*dt + (rand(-1.0:1.0)/2.0)*scalay*versore_principale(posingle)[2]
-									       
+						if distanza_destinazione(posingle)<1.0
+							destinazione = prossima_destinazione(posingle)
+							posingle.ladestx = destinazione[1]
+							posingle.ladesty = destinazione[2]
+						end
 		if posingle == STATOPEDONE_ZERO
 			return posingle
 		else
