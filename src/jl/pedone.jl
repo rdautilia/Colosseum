@@ -1,4 +1,4 @@
-const elle = 4.5 ::Float64		# Il raggio di non sovrapposizione dei pedoni
+const elle = 0.0 ::Float64		# Il raggio di non sovrapposizione dei pedoni
 
 ############################### QUESTA È IL TIPO STATOPEDONE
 type Statopedone 
@@ -11,7 +11,7 @@ type Statopedone
 		
 end
 
-const STATOPEDONE_DEFAULT = Statopedone(0.1,0.1,0.2,0.2,0.1,0.1)
+const STATOPEDONE_DEFAULT = Statopedone(0.1,0.1,1000.2,1000.2,0.1,0.1)
 const STATOPEDONE_ZERO    = Statopedone(-10.0,-10.0,0.0,0.0,0.0,0.0)
 
 ## Calcola il versore della velocità del pedone, quindi della direzione in cui sta andando
@@ -123,7 +123,7 @@ function aggiungi_pedone()
 a = rand(1:N)
 dest = scegli_destinazione();
 orig = scegli_origine();
-	if stato_dopo[a] == STATOPEDONE_ZERO && rand() < 0.5 && dest != orig
+	if stato_dopo[a] == STATOPEDONE_ZERO && rand() < 0.3 && dest != orig
 		stato_dopo[a] = Statopedone(rand(orig[1]-5.0 : orig[1]+5.0),rand(orig[2]-5.0 : orig[2]+5.0),10.02,10.02,dest[1],dest[2])
 	end
 end
