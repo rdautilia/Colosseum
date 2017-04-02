@@ -6,26 +6,26 @@ using JLD
 # INCLUDE LE NOSTRE LIBRERIE E I NOSTRI DATI
 include("vincoli.jl")
 include("pedone.jl")
+include("nodi_fase0.jl")
 # INIZIALIZZO LE COSTANTI
 const N=500 ::Int64				# Il numero di pedoni
 const dt = 0.01 ::Float64			# Il passo di integrazione
 const diag = sqrt(2) ::Float64		# diagonale
 const dimenpedone = 2.1 ::Float64	# La dimensione del disegno pedone	
-const scalax = 1.2 ::Float64		# lunghezza del passo di un pedone nella direzione x
-const scalay = 1.2 ::Float64		# lunghezza del passo di un pedone nella direzione y
+const scalax = 0.4 ::Float64		# lunghezza del passo di un pedone nella direzione x
+const scalay = 0.4 ::Float64		# lunghezza del passo di un pedone nella direzione y
 const areacolosseo_coord = [314 256; 329 242; 359 223; 382 212; 419 204; 454 200; 489 204; 
 523 211; 558 223; 597 245; 624 266; 659 306; 682 352; 688 403; 678 452; 651 444; 631 482; 
 600 507; 562 525; 520 533; 485 531; 446 524; 412 510; 374 490; 344 462; 314 420; 300 384; 
 300 351; 304 323; 312 299; 322 285] # L'area interna del colosseo
 #const destinazioni = [[479, 382],[352, 81],[39, 838],[5, 349]]
-const destinazioni = [[354, 187]]
+#const destinazioni = [[354, 187]]
 
 #const origini = [[352, 81],[39, 838],[5, 349]]
-const origini = [[352, 81]]
 
 ############### La funzione che seleziona a caso un punto di partenza ###########
 function scegli_origine()
-               a = rand(1:size(origini)[1])
+               a = rand(1:length(origini))
                b = origini[a]
                return b
        end
@@ -45,8 +45,8 @@ stato_dopo[1]=Statopedone(STATOPEDONE_DEFAULT)
 #	stato_prima[i] = Statopedone(STATOPEDONE_ZERO)
 #end
 for i in 1:N
-	dest=scegli_destinazione();
 	orig=scegli_origine();
+#	dest=scegli_destinazione();
 	stato_dopo[i] = Statopedone(STATOPEDONE_ZERO)
 end
 ###ROB> for i in 1:N
@@ -314,6 +314,11 @@ for s in values(edifici_coord)
 	draw(window, disegna_poligono(s))
 end
 	draw(window, mousepos_text)
+# disegna i nodi #####
+	for k in keys(cn)
+		draw(window, creanodo(k,cn[k]))
+	end
+######################
 	display(window)
 end
 

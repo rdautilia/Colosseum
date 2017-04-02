@@ -1,7 +1,4 @@
-const elle = 0.5 ::Float64		# Il raggio di non sovrapposizione dei pedoni
-const ledestinazioni = Dict{Array, Array}(
-[354 187] => [[595 121], [250 265]]
-)
+const elle = 0.001 ::Float64		# Il raggio di non sovrapposizione dei pedoni
 
 ############################### QUESTA È IL TIPO STATOPEDONE
 type Statopedone 
@@ -138,10 +135,12 @@ end
 ### Aggiunge un pedone ##########
 function aggiungi_pedone()
 a = rand(1:N)
-dest = scegli_destinazione();
-orig = scegli_origine();
-	if stato_dopo[a] == STATOPEDONE_ZERO && rand() < 0.3 && dest != orig
-		stato_dopo[a] = Statopedone(rand(orig[1]-5.0 : orig[1]+5.0),rand(orig[2]-5.0 : orig[2]+5.0),10.02,10.02,dest[1],dest[2])
+#dest = scegli_destinazione();
+orig = scegli_origine()
+o1 = rand(orig[1]-5.0 : orig[1]+5.0)
+o2 = rand(orig[2]-5.0 : orig[2]+5.0)
+	if stato_dopo[a] == STATOPEDONE_ZERO && rand() < 0.1 #&& dest != orig
+		stato_dopo[a] = Statopedone(o1,o2,10.02,10.02,orig[1],orig[2])
 	end
 end
 	
