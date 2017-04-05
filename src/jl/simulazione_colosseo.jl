@@ -3,26 +3,32 @@ using SFML
 using AnimatedPlots
 using JLD
 
+# INCLUDE LE NOSTRE LIBRERIE E I NOSTRI DATI
+include("vincoli.jl")
+include("pedone.jl")
+include("nodi_fase0.jl")
 # INIZIALIZZO LE COSTANTI
-const N=3000 ::Int64				# Il numero di pedoni
+const GRAFO = 1
+const VINCOLI = 1
+const MOUSE = 1
+const N=500 ::Int64				# Il numero di pedoni
 const dt = 0.01 ::Float64			# Il passo di integrazione
-const numero_iterazioni = 500		# Il numero di iterazioni della simulazione
 const diag = sqrt(2) ::Float64		# diagonale
-const raggio = 0.5 ::Float64		# Il raggio di non sovrapposizione dei pedoni
-const dimenpedone = 2.1 ::Float64	# La dimensione del pedone	
-const scalax = 1.2 ::Float64		# lunghezza del passo di un pedone nella direzione x
-const scalay = 1.2 ::Float64		# lunghezza del passo di un pedone nella direzione y
-const areacolosseo_coord = [314 256; 329 242; 359 223; 382 212; 419 204; 454 200; 489 204; 
+const dimenpedone = 2.1 ::Float64	# La dimensione del disegno pedone	
+const scalax = 0.4 ::Float64		# lunghezza del passo di un pedone nella direzione x
+const scalay = 0.4 ::Float64		# lunghezza del passo di un pedone nella direzione y
+const areacolosseo_coord = Dict{String, Array}("areacolosseo_coord" => [314 256; 329 242; 359 223; 382 212; 419 204; 454 200; 489 204; 
 523 211; 558 223; 597 245; 624 266; 659 306; 682 352; 688 403; 678 452; 651 444; 631 482; 
 600 507; 562 525; 520 533; 485 531; 446 524; 412 510; 374 490; 344 462; 314 420; 300 384; 
-300 351; 304 323; 312 299; 322 285] # L'area interna del colosseo
-const destinazioni = [[479, 382],[352, 81],[39, 838],[5, 349]]
-const origini = [[352, 81],[39, 838],[5, 349]]
-include("vincoli.jl")
+300 351; 304 323; 312 299; 322 285]) # L'area interna del colosseo
+#const destinazioni = [[479, 382],[352, 81],[39, 838],[5, 349]]
+#const destinazioni = [[354, 187]]
+
+#const origini = [[352, 81],[39, 838],[5, 349]]
 
 ############### La funzione che seleziona a caso un punto di partenza ###########
 function scegli_origine()
-               a = rand(1:size(origini)[1])
+               a = rand(1:length(origini))
                b = origini[a]
                return b
        end
@@ -34,29 +40,16 @@ function scegli_destinazione()
                return b
        end
 #########################################################################
-############################### QUESTA È UNA PROVA 
-type Statopedone 
-		lax ::Float64
-		lay::Float64
-		lavx::Float64
-		lavy::Float64
-		ladestx::Float64
-		ladesty::Float64
-		
-end
-
-const STATOPEDONE_DEFAULT = Statopedone(0.1,0.1,0.1,0.1,0.1,0.1)
-const STATOPEDONE_ZERO    = Statopedone(-10.0,-10.0,0.0,0.0,0.0,0.0)
-
 #stato_prima = [] questo non ci serve, lo creiamo dopo con copy
 stato_dopo  = Array(Statopedone,N)
+stato_dopo[1]=Statopedone(STATOPEDONE_DEFAULT)
 #Lo stato prima non ci serve, viene creato dpo, quando servirà
 #for i in 1:N
 #	stato_prima[i] = Statopedone(STATOPEDONE_ZERO)
 #end
 for i in 1:N
-	dest=scegli_destinazione();
 	orig=scegli_origine();
+#	dest=scegli_destinazione();
 	stato_dopo[i] = Statopedone(STATOPEDONE_ZERO)
 end
 ###ROB> for i in 1:N
@@ -64,20 +57,6 @@ end
 ###ROB> 	orig=scegli_origine();
 ###ROB> 	stato_dopo[i] = Statopedone(rand(orig[1]-5.0 : orig[1]+5.0),rand(orig[2]-5.0 : orig[2]+5.0),10.02,10.02,dest[1],dest[2])
 ###ROB> end
-
-
-### Aggiunge un pedone ##########
-function aggiungi_pedone()
-a = rand(1:N)
-dest = scegli_destinazione();
-orig = scegli_origine();
-	if stato_dopo[a] == STATOPEDONE_ZERO && rand() < 0.5 && dest != orig
-		stato_dopo[a] = Statopedone(rand(orig[1]-5.0 : orig[1]+5.0),rand(orig[2]-5.0 : orig[2]+5.0),10.02,10.02,dest[1],dest[2])
-	end
-end
-	
-#################################
-
 # Variabili globali che sarebbe meglio eliminare
 ####ROB> posizioni_prima = zeros(2,N)				# le posizioni dei pedoni al tempo t
 ####ROB> altre = [rand(339.0:362.0,1,N);rand(75.0:93.0,1,N)] # altre posizioni
@@ -107,7 +86,7 @@ function ciclo_poligono(lista)
 			return transpose(cal)
 end
 ##############################################################
-const areacolosseo = ciclo_poligono(areacolosseo_coord) # Non capisco perché debba stare qui
+###ROB> const areacolosseo = ciclo_poligono(areacolosseo_coord) # Non capisco perché debba stare qui
 
 ######################## UNA FUNZIONE CHE CREA I POLIGONI DEGLI EDIFICI ###############
 function disegna_poligono(polig_coord)
@@ -134,23 +113,38 @@ a = sum(map(x->inpoly(lax,lay,x),w))
 		return 0 # esterno
 	end
 end
-
+#####################
+############ Conta i pedoni nel Colosseo ###########
+function nel_colosseo(popolazione::Array{Statopedone})
+	numero::Int64 = 0
+	for pedone in popolazione
+		numero = numero + esterno(pedone.lax,pedone.lay,areacolosseo_coord)
+	end
+	return numero
+end
+##################
 # AGGIORNAMENTO DI UNA POSIZIONE A VELOCITA' COSTANTE
 function aggiornamento(posingle::Statopedone)
-	norm =sqrt((posingle.ladestx-posingle.lax)^2+(posingle.ladesty-posingle.lay)^2)
-	#       dx = posingle[1] + scalax*(2*rand()-1.0) + 0.001*(180.0-posingle[1])	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
-	#       dy = posingle[2] + scalay*(2*rand()-1.0) + 0.001*(553.0-posingle[2])	#qui sarebbe meglio usare map()
-				if (inpoly(posingle.lax,posingle.lay,areacolosseo) == 1
-					)
-			       dx = posingle.lax + (rand(-1.0:1.0)/scalax + posingle.lavx*(posingle.ladestx-posingle.lax))*dt	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
-			       dy = posingle.lay + (rand(-1.0:1.0)/scalay + posingle.lavy*(posingle.ladesty-posingle.lay))*dt	#qui sarebbe meglio usare map()
-				else
-					dx = posingle.lax + (rand(-1.0:1.0)/scalax + 10.0*posingle.lavx*(posingle.ladestx-posingle.lax)/norm)*dt	#qui sarebbe meglio usare map(); (10,10) è l'obiettivo da raggiungere
-			        dy = posingle.lay + (rand(-1.0:1.0)/scalax + 10.0*posingle.lavy*(posingle.ladesty-posingle.lay)/norm)*dt	#qui sarebbe meglio usare map()
-			       
-				end
-	
-       return Statopedone(dx,dy,posingle.lavx,posingle.lavy,posingle.ladestx,posingle.ladesty)
+	px::Float64 = 0.0
+	py::Float64 = 0.0
+	vx::Float64 = 0.0
+	vy::Float64 = 0.0
+#						lav =velocitaTCS(posingle,popolazione_attiva(stato_dopo), elle,5.2,1.0)
+#						lav = 50.5
+#						vx = lav*versore_complessivo(posingle,popolazione_attiva(stato_dopo))[1]
+#						vy = lav*versore_complessivo(posingle,popolazione_attiva(stato_dopo))[2]
+						px = posingle.lax  + posingle.lavx*versore_principale(posingle)[1]*dt + rand(0.0:1.0)*(rand(-1.0:1.0)/2.0)*scalax*versore_principale(posingle)[1]
+						py = posingle.lay  + posingle.lavy*versore_principale(posingle)[2]*dt + rand(0.0:1.0)*(rand(-1.0:1.0)/2.0)*scalay*versore_principale(posingle)[2]
+						if distanza_destinazione(posingle)<1.0
+							destinazione = prossima_destinazione(posingle)
+							posingle.ladestx = destinazione[1]
+							posingle.ladesty = destinazione[2]
+						end
+		if posingle == STATOPEDONE_ZERO
+			return posingle
+		else
+       		return Statopedone(px,py,posingle.lavx,posingle.lavy,posingle.ladestx,posingle.ladesty)
+		end
 end
 ################################
 
@@ -210,7 +204,7 @@ function aggiornamento_totale(stato)
 		albero = KDTree(posizioni(stato))
 	for i=1:N
 		a = aggiornamento(stato[i])
-		if (length(inrange(albero, [a.lax, a.lay], raggio, true)) == 0 && esterno(a.lax,a.lay,edifici_coord)==0)
+		if (length(inrange(albero, [a.lax, a.lay], elle, true)) == 0.0 && 	esterno(a.lax,a.lay,edifici_coord)==0.0)
 			stato[i] = a
 		end
 	end
@@ -232,6 +226,20 @@ function colori(x)
 	    end
 end
 #########################################
+# disegna il grafico dei visitatori nel Colosseo
+function grafico_visitatori(finestra)
+	p1=Vector2f(945,220.0)
+	p2=Vector2f(1250,220.0)
+	linex = Line(p1, p2, 1)
+	set_fillcolor(linex, SFML.Color(160,160,160))
+	p1=Vector2f(945,220.0)
+	p2=Vector2f(945,90.0)
+	liney = Line(p1, p2, 1)
+	set_fillcolor(liney, SFML.Color(160,160,160))
+	draw(finestra, linex)
+	draw(finestra, liney)
+
+end
 #################################################################################################
 # LOAD THE TEXTURE FOR THE IMAGE ##### DA METTERE IN UNA FUNZIONE
 texture = Texture("../../img/00-FASE0.jpg")
@@ -247,7 +255,22 @@ set_string(mousepos_text, "Mouse Position: ")
 set_color(mousepos_text, SFML.red)
 set_charactersize(mousepos_text, 18)
 ##########################################
-
+# Create the text ##### DA METTERE IN UNA FUNZIONE
+pedattivi_text = RenderText()
+#set_position(mousepos_text, Vector2f(texture_size.x+40, 20))
+set_position(pedattivi_text, Vector2f(940, 40))
+set_string(pedattivi_text, "Pedoni complessivi: ")
+set_color(pedattivi_text, SFML.Color(153,255,153))
+set_charactersize(pedattivi_text, 14)
+##########################################
+# Create the text ##### DA METTERE IN UNA FUNZIONE
+nelcolosseo_text = RenderText()
+#set_position(mousepos_text, Vector2f(texture_size.x+40, 20))
+set_position(nelcolosseo_text, Vector2f(940, 60))
+set_string(nelcolosseo_text, "Pedoni complessivi: ")
+set_color(nelcolosseo_text, SFML.Color(153,255,153))
+set_charactersize(nelcolosseo_text, 14)
+##########################################
 
 # Create the logo sprite and add the texture to it ##### DA METTERE IN UNA FUNZIONE
 sfondo = Sprite()
@@ -307,11 +330,16 @@ while isopen(window)
     end
 ######################
 
-	clear(window, SFML.Color(176,196,222))
+	clear(window, SFML.Color(64,64,64))
 	draw(window, sfondo)
 	aggiungi_pedone()
 	stato_prima = copy(stato_dopo)
 	aggiornamento_totale(stato_dopo)
+	pa = length(popolazione_attiva(stato_dopo))
+	pnc = (nel_colosseo(stato_dopo))
+	
+	set_string(pedattivi_text, "Popolazione: $pa")
+	set_string(nelcolosseo_text, "Visitatori: $pnc")
 #	vel = veloc(stato_dopo,stato_prima)	
 	for i =1:N
 #			mmm = norm(vel[:,i])/diag		
@@ -327,11 +355,27 @@ while isopen(window)
 	end
 
 	redraw(plotwindow)
+	# Disegna il grafico dei visitatori
+	grafico_visitatori(window)
 	# Draw the plots
-for s in values(edifici_coord)
-	draw(window, disegna_poligono(s))
+if VINCOLI == 1
+	for s in values(edifici_coord)
+		draw(window, disegna_poligono(s))
+	end
 end
+if MOUSE == 1
 	draw(window, mousepos_text)
+end
+	draw(window, pedattivi_text)
+	draw(window, nelcolosseo_text)
+if GRAFO ==1 
+# disegna i nodi #####
+	for k in keys(cn)
+		draw(window, creanodo(k,cn[k]))
+	end
+######################
+	disegna_link(window)
+end
 	display(window)
 end
 
