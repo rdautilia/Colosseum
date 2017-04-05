@@ -18,14 +18,6 @@ const diag = sqrt(2) ::Float64		# diagonale
 const dimenpedone = 2.1 ::Float64	# La dimensione del disegno pedone	
 const scalax = 0.4 ::Float64		# lunghezza del passo di un pedone nella direzione x
 const scalay = 0.4 ::Float64		# lunghezza del passo di un pedone nella direzione y
-const areacolosseo_coord = Dict{String, Array}("areacolosseo_coord" => [314 256; 329 242; 359 223; 382 212; 419 204; 454 200; 489 204; 
-523 211; 558 223; 597 245; 624 266; 659 306; 682 352; 688 403; 678 452; 651 444; 631 482; 
-600 507; 562 525; 520 533; 485 531; 446 524; 412 510; 374 490; 344 462; 314 420; 300 384; 
-300 351; 304 323; 312 299; 322 285]) # L'area interna del colosseo
-#const destinazioni = [[479, 382],[352, 81],[39, 838],[5, 349]]
-#const destinazioni = [[354, 187]]
-
-#const origini = [[352, 81],[39, 838],[5, 349]]
 
 ############### La funzione che seleziona a caso un punto di partenza ###########
 function scegli_origine()
@@ -34,6 +26,7 @@ function scegli_origine()
                return b
        end
 #########################################################################
+
 ############### La funzione che seleziona una destinazione a caso ###########
 function scegli_destinazione()
                a = rand(1:size(destinazioni)[1])
@@ -41,27 +34,15 @@ function scegli_destinazione()
                return b
        end
 #########################################################################
-#stato_prima = [] questo non ci serve, lo creiamo dopo con copy
+########### Le variabili ###############
 stato_dopo  = Array(Statopedone,N)
 stato_dopo[1]=Statopedone(STATOPEDONE_DEFAULT)
-#Lo stato prima non ci serve, viene creato dpo, quando servirà
-#for i in 1:N
-#	stato_prima[i] = Statopedone(STATOPEDONE_ZERO)
-#end
+
 for i in 1:N
 	orig=scegli_origine();
-#	dest=scegli_destinazione();
 	stato_dopo[i] = Statopedone(STATOPEDONE_ZERO)
 end
-###ROB> for i in 1:N
-###ROB> 	dest=scegli_destinazione();
-###ROB> 	orig=scegli_origine();
-###ROB> 	stato_dopo[i] = Statopedone(rand(orig[1]-5.0 : orig[1]+5.0),rand(orig[2]-5.0 : orig[2]+5.0),10.02,10.02,dest[1],dest[2])
-###ROB> end
-# Variabili globali che sarebbe meglio eliminare
-####ROB> posizioni_prima = zeros(2,N)				# le posizioni dei pedoni al tempo t
-####ROB> altre = [rand(339.0:362.0,1,N);rand(75.0:93.0,1,N)] # altre posizioni
-####ROB> posizioni_dopo = hcat([rand(-14.0:-4.0,1,N);rand(341.0:361.0,1,N)],altre) # le posizioni dei pedoni al tempo t+dt
+
 velocita = zeros(2,N)						# le posizioni dei pedoni al tempo t+dt
 k = 0 ::Int64								# Un iteratore
 mmm = 0.0 ::Float64							# variabile di appoggio, ricontrollare se ci serve
@@ -87,7 +68,6 @@ function ciclo_poligono(lista)
 			return transpose(cal)
 end
 ##############################################################
-###ROB> const areacolosseo = ciclo_poligono(areacolosseo_coord) # Non capisco perché debba stare qui
 
 ######################## UNA FUNZIONE CHE CREA I POLIGONI DEGLI EDIFICI ###############
 function disegna_poligono(polig_coord)
@@ -187,7 +167,7 @@ return mod(i,2)
 end
 #####################################################
 # La funzione che legge lo stato dei pedoni e restituisce la matrice 2XN delle posizioni
-function posizioni(stato)
+function posizioni(stato::Array{Statopedone})
        lex = []
        ley = []
        for i=1:N
