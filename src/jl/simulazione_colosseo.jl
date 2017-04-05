@@ -8,6 +8,9 @@ include("vincoli.jl")
 include("pedone.jl")
 include("nodi_fase0.jl")
 # INIZIALIZZO LE COSTANTI
+const GRAFO = 1
+const VINCOLI = 1
+const MOUSE = 1
 const N=500 ::Int64				# Il numero di pedoni
 const dt = 0.01 ::Float64			# Il passo di integrazione
 const diag = sqrt(2) ::Float64		# diagonale
@@ -223,6 +226,20 @@ function colori(x)
 	    end
 end
 #########################################
+# disegna il grafico dei visitatori nel Colosseo
+function grafico_visitatori(finestra)
+	p1=Vector2f(945,220.0)
+	p2=Vector2f(1250,220.0)
+	linex = Line(p1, p2, 1)
+	set_fillcolor(linex, SFML.Color(160,160,160))
+	p1=Vector2f(945,220.0)
+	p2=Vector2f(945,90.0)
+	liney = Line(p1, p2, 1)
+	set_fillcolor(liney, SFML.Color(160,160,160))
+	draw(finestra, linex)
+	draw(finestra, liney)
+
+end
 #################################################################################################
 # LOAD THE TEXTURE FOR THE IMAGE ##### DA METTERE IN UNA FUNZIONE
 texture = Texture("../../img/00-FASE0.jpg")
@@ -338,19 +355,27 @@ while isopen(window)
 	end
 
 	redraw(plotwindow)
+	# Disegna il grafico dei visitatori
+	grafico_visitatori(window)
 	# Draw the plots
-for s in values(edifici_coord)
-	draw(window, disegna_poligono(s))
+if VINCOLI == 1
+	for s in values(edifici_coord)
+		draw(window, disegna_poligono(s))
+	end
 end
+if MOUSE == 1
 	draw(window, mousepos_text)
+end
 	draw(window, pedattivi_text)
 	draw(window, nelcolosseo_text)
+if GRAFO ==1 
 # disegna i nodi #####
-#	for k in keys(cn)
-#		draw(window, creanodo(k,cn[k]))
-#	end
+	for k in keys(cn)
+		draw(window, creanodo(k,cn[k]))
+	end
 ######################
-#	disegna_link(window)
+	disegna_link(window)
+end
 	display(window)
 end
 
