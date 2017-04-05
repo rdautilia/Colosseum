@@ -7,6 +7,7 @@ using JLD
 include("vincoli.jl")
 include("pedone.jl")
 include("nodi_fase0.jl")
+
 # INIZIALIZZO LE COSTANTI
 const GRAFO = 1
 const VINCOLI = 1
