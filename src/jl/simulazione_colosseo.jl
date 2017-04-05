@@ -339,9 +339,9 @@ while isopen(window)
 
 	redraw(plotwindow)
 	# Draw the plots
-#for s in values(edifici_coord)
-#	draw(window, disegna_poligono(s))
-#end
+for s in values(edifici_coord)
+	draw(window, disegna_poligono(s))
+end
 	draw(window, mousepos_text)
 	draw(window, pedattivi_text)
 	draw(window, nelcolosseo_text)

@@ -1,4 +1,4 @@
-const elle = 0.001 ::Float64		# Il raggio di non sovrapposizione dei pedoni
+const elle = 0.05 ::Float64		# Il raggio di non sovrapposizione dei pedoni
 
 ############################### QUESTA È IL TIPO STATOPEDONE
 type Statopedone 
@@ -7,8 +7,7 @@ type Statopedone
 		lavx::Float64
 		lavy::Float64
 		ladestx::Float64
-		ladesty::Float64
-		
+		ladesty::Float64		
 end
 
 const STATOPEDONE_DEFAULT = Statopedone(0.1,0.1,1000.2,1000.2,0.1,0.1)
