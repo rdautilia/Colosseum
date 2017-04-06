@@ -12,12 +12,12 @@ include("nodi_fase0.jl")
 const GRAFO = 1
 const VINCOLI = 1
 const MOUSE = 1
-const N=500 ::Int64				# Il numero di pedoni
+const N=5000 ::Int64				# Il numero di pedoni
 const dt = 0.01 ::Float64			# Il passo di integrazione
 const diag = sqrt(2) ::Float64		# diagonale
 const dimenpedone = 2.1 ::Float64	# La dimensione del disegno pedone	
-const scalax = 0.4 ::Float64		# lunghezza del passo di un pedone nella direzione x
-const scalay = 0.4 ::Float64		# lunghezza del passo di un pedone nella direzione y
+const scalax = 1.4 ::Float64		# lunghezza del passo di un pedone nella direzione x
+const scalay = 1.4 ::Float64		# lunghezza del passo di un pedone nella direzione y
 
 ############### La funzione che seleziona a caso un punto di partenza ###########
 function scegli_origine()
@@ -110,12 +110,22 @@ function aggiornamento(posingle::Statopedone)
 	py::Float64 = 0.0
 	vx::Float64 = 0.0
 	vy::Float64 = 0.0
+	lozx::Float64 = 0.0
+	lozy::Float64 = 0.0
+	
 #						lav =velocitaTCS(posingle,popolazione_attiva(stato_dopo), elle,5.2,1.0)
 #						lav = 50.5
 #						vx = lav*versore_complessivo(posingle,popolazione_attiva(stato_dopo))[1]
 #						vy = lav*versore_complessivo(posingle,popolazione_attiva(stato_dopo))[2]
-						px = posingle.lax  + posingle.lavx*versore_principale(posingle)[1]*dt + rand(0.0:1.0)*(rand(-1.0:1.0)/2.0)*scalax*versore_principale(posingle)[1]
-						py = posingle.lay  + posingle.lavy*versore_principale(posingle)[2]*dt + rand(0.0:1.0)*(rand(-1.0:1.0)/2.0)*scalay*versore_principale(posingle)[2]
+					if mod(duc,20) ==0
+						lozx = 1.0
+						lozy = 1.0
+					else
+						lozx = 0.0
+						lozy = 0.0
+					end
+						px = posingle.lax  + posingle.lavx*versore_principale(posingle)[1]*dt + lozx*(rand(-1.0:1.0)/2.0)*scalax*versore_principale(posingle)[1]
+						py = posingle.lay  + posingle.lavy*versore_principale(posingle)[2]*dt + lozy*(rand(-1.0:1.0)/2.0)*scalay*versore_principale(posingle)[2]
 						if distanza_destinazione(posingle)<1.0
 							destinazione = prossima_destinazione(posingle)
 							posingle.ladestx = destinazione[1]
@@ -170,10 +180,10 @@ end
 function posizioni(stato::Array{Statopedone})
        lex = []
        ley = []
-       for i=1:N
+       for i=1:length(stato)
            push!(lex,stato[i].lax)
        end
-       for i=1:N
+       for i=1:length(stato)
            push!(ley,stato[i].lay)
        end
 	return transpose([lex ley])
@@ -293,7 +303,7 @@ circles = CircleShape[]
 for i = 1:N
 	circle = CircleShape()
 	set_radius(circle, dimenpedone)
-	set_fillcolor(circle, SFML.red)
+	set_fillcolor(circle, SFML.Color(255,0,0))
 	set_origin(circle, Vector2f(0, 0))
 	push!(circles, circle)
 end
@@ -341,7 +351,7 @@ while isopen(window)
 	for i = 1:length(circles)
 		draw(window, circles[i])
 	end
-	puntini=circshift(puntini,-1)
+	puntini=circshift(puntini,1)
 	for puntino in puntini
 		set_position(puntino, Vector2f(get_position(puntino)[1]+1, get_position(puntino)[2]))
 	end

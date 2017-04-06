@@ -26,7 +26,11 @@ const cn = Dict{String, Array}(
 "n25" => [85 510],
 "n26" => [132 561],
 "n27" => [63 753],
-"n28" => [45 843]
+"n28" => [45 843],
+"n29" => [552 144],
+"n30" => [850 268],
+"n31" => [575 561],
+"n32" => [670 442]
 )
 
 const origini = [cn["n1"], cn["n15"], cn["n19"], cn["n28"]]
@@ -34,8 +38,8 @@ const origini = [cn["n1"], cn["n15"], cn["n19"], cn["n28"]]
 #cn["n"] => [cn["n"],cn["n"],cn["n"],cn["n"],cn["n"]]
 
 const ledestinazioni = Dict{Array, Array}(
-cn["n1"] => [cn["n2"],cn["n2"],cn["n15"]],
-cn["n2"] => [cn["n3"],cn["n3"],cn["n3"],cn["n3"],cn["n3"],cn["n3"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n6"], cn["n14"], cn["n15"], cn["n16"]],
+cn["n1"] => [cn["n2"],cn["n2"],cn["n15"],cn["n29"]],
+cn["n2"] => [cn["n3"],cn["n3"],cn["n3"],cn["n3"],cn["n3"],cn["n3"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n6"], cn["n29"], cn["n15"], cn["n29"]],
 cn["n3"] => [cn["n2"], cn["n4"], cn["n4"], cn["n4"], cn["n4"], cn["n5"],cn["n14"],cn["n18"]],
 cn["n4"] => [cn["n7"]],
 cn["n5"] => [ cn["n3"], cn["n3"],cn["n6"],cn["n8"],cn["n9"],cn["n10"]],
@@ -46,7 +50,7 @@ cn["n9"] => [cn["n5"],cn["n6"],cn["n8"],cn["n10"]],
 cn["n10"] => [cn["n3"],cn["n5"],cn["n6"],cn["n8"],cn["n9"],cn["n11"],cn["n12"],cn["n13"]],
 cn["n11"] => [cn["n6"],cn["n8"],cn["n9"],cn["n10"]],
 cn["n12"] => [cn["n7"],cn["n10"],cn["n11"],cn["n13"]],
-cn["n13"] => [cn["n7"],cn["n9"],cn["n10"],cn["n11"],cn["n12"]],
+cn["n13"] => [cn["n7"],cn["n9"],cn["n10"],cn["n11"],cn["n12"], cn["n31"]],
 cn["n14"] => [cn["n16"],cn["n17"]],
 cn["n15"] => [cn["n1"],cn["n2"]],
 cn["n16"] => [cn["n3"],cn["n14"]],
@@ -62,9 +66,10 @@ cn["n25"] => [cn["n21"],cn["n23"],cn["n24"],cn["n26"],cn["n27"]],
 cn["n26"] => [cn["n23"],cn["n24"],cn["n25"],cn["n27"],cn["n28"]],
 cn["n27"] => [cn["n23"],cn["n24"],cn["n25"],cn["n26"],cn["n28"]],
 cn["n28"] => [cn["n24"],cn["n25"],cn["n26"],cn["n27"]],
-
-
-
+cn["n29"] => [cn["n1"],cn["n2"],cn["n16"],cn["n30"]],
+cn["n30"] => [cn["n17"],cn["n29"]],
+cn["n31"] => [cn["n13"],cn["n32"]],
+cn["n32"] => [cn["n4"]]
 )
 
 ##crea il render text

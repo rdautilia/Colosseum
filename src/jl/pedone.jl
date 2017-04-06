@@ -144,3 +144,34 @@ o2 = rand(orig[2]-5.0 : orig[2]+5.0)
 end
 	
 #################################
+##### Una funzione che scrive le coordinate spaziali in un file in un formato leggibile da Mathematica
+function scrivi_risultato(nomefile::String)
+	leposizioni = posizioni(popolazione_attiva(stato_dopo))
+	m,n = size(leposizioni)
+	f = open(nomefile, "w") do f
+		print(f,"{")
+		for i = 1:n
+			lax = round(leposizioni[1,i])
+			lay = 840-round(leposizioni[2,i])
+			if i<n
+				print(f,"{$lax,$lay},")
+			else
+				print(f,"{$lax,$lay}")
+			end
+		end
+		print(f,"}")
+	end
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
