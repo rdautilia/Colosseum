@@ -1,5 +1,5 @@
 const cn = Dict{String, Array}(
-"n1" => [276 67],
+"n1" => [347 82],
 "n2" => [355 107],
 "n3" => [352 189],
 "n4" => [480 382],
@@ -35,7 +35,7 @@ const origini = [cn["n1"], cn["n15"], cn["n19"], cn["n28"]]
 
 const ledestinazioni = Dict{Array, Array}(
 cn["n1"] => [cn["n2"],cn["n2"],cn["n15"]],
-cn["n2"] => [cn["n3"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n6"], cn["n14"], cn["n15"], cn["n16"]],
+cn["n2"] => [cn["n3"],cn["n3"],cn["n3"],cn["n3"],cn["n3"],cn["n3"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n6"], cn["n14"], cn["n15"], cn["n16"]],
 cn["n3"] => [cn["n2"], cn["n4"], cn["n4"], cn["n4"], cn["n4"], cn["n5"],cn["n14"],cn["n18"]],
 cn["n4"] => [cn["n7"]],
 cn["n5"] => [ cn["n3"], cn["n3"],cn["n6"],cn["n8"],cn["n9"],cn["n10"]],

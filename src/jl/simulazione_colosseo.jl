@@ -209,6 +209,7 @@ end
 #########################################
 # disegna il grafico dei visitatori nel Colosseo
 function grafico_visitatori(finestra)
+#	dati = zeros(50)
 	p1=Vector2f(945,220.0)
 	p2=Vector2f(1250,220.0)
 	linex = Line(p1, p2, 1)
@@ -217,9 +218,9 @@ function grafico_visitatori(finestra)
 	p2=Vector2f(945,90.0)
 	liney = Line(p1, p2, 1)
 	set_fillcolor(liney, SFML.Color(160,160,160))
+		
 	draw(finestra, linex)
 	draw(finestra, liney)
-
 end
 #################################################################################################
 # LOAD THE TEXTURE FOR THE IMAGE ##### DA METTERE IN UNA FUNZIONE
@@ -240,7 +241,7 @@ set_charactersize(mousepos_text, 18)
 pedattivi_text = RenderText()
 #set_position(mousepos_text, Vector2f(texture_size.x+40, 20))
 set_position(pedattivi_text, Vector2f(940, 40))
-set_string(pedattivi_text, "Pedoni complessivi: ")
+#set_string(pedattivi_text, "Pedoni complessivi: ")
 set_color(pedattivi_text, SFML.Color(153,255,153))
 set_charactersize(pedattivi_text, 14)
 ##########################################
@@ -248,7 +249,7 @@ set_charactersize(pedattivi_text, 14)
 nelcolosseo_text = RenderText()
 #set_position(mousepos_text, Vector2f(texture_size.x+40, 20))
 set_position(nelcolosseo_text, Vector2f(940, 60))
-set_string(nelcolosseo_text, "Pedoni complessivi: ")
+#set_string(nelcolosseo_text, "Pedoni complessivi: ")
 set_color(nelcolosseo_text, SFML.Color(153,255,153))
 set_charactersize(nelcolosseo_text, 14)
 ##########################################
@@ -269,17 +270,27 @@ settings = ContextSettings()
 settings.antialiasing_level = 3
 window = RenderWindow("Flussi Colosseo", 1400, 900)
 # Create the plot window using the render window we created earlier
-plotwindow = create_window(window)
+#plotwindow = create_window(window)
 ###### set_vsync_enabled(window, true)
 
 # Get the views (these are used for drawing
 view = get_default_view(window)
-plotview = plotwindow.view
+#plotview = plotwindow.view
 set_framerate_limit(window, 120)
 event = Event()
+############## il grafico
+puntini = CircleShape[]
+for i = 1:300
+	puntino = CircleShape()
+	set_radius(puntino, 0.5)
+	set_fillcolor(puntino, SFML.Color(153,255,153))
+	set_position(puntino, Vector2f(946+i, 218))
+	push!(puntini, puntino)
+end
 
+###############################
 circles = CircleShape[]
-for i = 1:2*N
+for i = 1:N
 	circle = CircleShape()
 	set_radius(circle, dimenpedone)
 	set_fillcolor(circle, SFML.red)
@@ -321,12 +332,8 @@ while isopen(window)
 	
 	set_string(pedattivi_text, "Popolazione: $pa")
 	set_string(nelcolosseo_text, "Visitatori: $pnc")
-#	vel = veloc(stato_dopo,stato_prima)	
 	for i =1:N
-#			mmm = norm(vel[:,i])/diag		
 			set_position(circles[i], Vector2f(stato_dopo[i].lax, stato_dopo[i].lay))
-#			ll=convert(Int64,round(255*norm(vel[:,i])) % 255)
-#		set_fillcolor(circles[i], colori(mmm))
 	end
 
 	# Set the view for drawing the movements
@@ -334,8 +341,16 @@ while isopen(window)
 	for i = 1:length(circles)
 		draw(window, circles[i])
 	end
+	puntini=circshift(puntini,-1)
+	for puntino in puntini
+		set_position(puntino, Vector2f(get_position(puntino)[1]+1, get_position(puntino)[2]))
+	end
+	set_position(puntini[1], Vector2f(944,218-pnc))
+	for puntino in puntini
+		draw(window, puntino)
+	end
 
-	redraw(plotwindow)
+#	redraw(plotwindow)
 	# Disegna il grafico dei visitatori
 	grafico_visitatori(window)
 	# Draw the plots
