@@ -4,7 +4,7 @@ using AnimatedPlots
 using JLD
 
 # INCLUDE LE NOSTRE LIBRERIE E I NOSTRI DATI
-include("vincoli.jl")
+include("vincoli_fase0.jl")
 include("pedone.jl")
 include("nodi_fase0.jl")
 
