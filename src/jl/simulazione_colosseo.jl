@@ -4,15 +4,15 @@ using AnimatedPlots
 using JLD
 
 # INCLUDE LE NOSTRE LIBRERIE E I NOSTRI DATI
-include("vincoli_fase0.jl")
+include("vincoli_fase1.jl")
 include("pedone.jl")
-include("nodi_fase0.jl")
+include("nodi_fase1.jl")
 
 # INIZIALIZZO LE COSTANTI
 const GRAFO = 1
 const VINCOLI = 1
 const MOUSE = 1
-const N=5000 ::Int64				# Il numero di pedoni
+const N=500 ::Int64				# Il numero di pedoni
 const dt = 0.01 ::Float64			# Il passo di integrazione
 const diag = sqrt(2) ::Float64		# diagonale
 const dimenpedone = 2.1 ::Float64	# La dimensione del disegno pedone	
@@ -104,6 +104,41 @@ function nel_colosseo(popolazione::Array{Statopedone})
 	return numero
 end
 ##################
+# Aggiornamento della posizione secondo il modello [TCS]
+function aggiornamento_tcs(posingle::Statopedone)
+	px::Float64 = 0.0
+	py::Float64 = 0.0
+	vx::Float64 = 0.0
+	vy::Float64 = 0.0
+	lozx::Float64 = 0.0
+	lozy::Float64 = 0.0
+	
+#						lav =velocitaTCS(posingle,popolazione_attiva(stato_dopo), elle,5.2,1.0)
+#						lav = 50.5
+#						vx = lav*versore_complessivo(posingle,popolazione_attiva(stato_dopo))[1]
+#						vy = lav*versore_complessivo(posingle,popolazione_attiva(stato_dopo))[2]
+					if mod(duc,20) ==0
+						lozx = 1.0
+						lozy = 1.0
+					else
+						lozx = 0.0
+						lozy = 0.0
+					end
+						px = posingle.lax  + posingle.lavx*versore_principale(posingle)[1]*dt + lozx*(rand(-1.0:1.0)/2.0)*scalax*versore_principale(posingle)[1]
+						py = posingle.lay  + posingle.lavy*versore_principale(posingle)[2]*dt + lozy*(rand(-1.0:1.0)/2.0)*scalay*versore_principale(posingle)[2]
+						if distanza_destinazione(posingle)<1.0
+							destinazione = prossima_destinazione(posingle)
+							posingle.ladestx = destinazione[1]
+							posingle.ladesty = destinazione[2]
+						end
+		if posingle == STATOPEDONE_ZERO
+			return posingle
+		else
+       		return Statopedone(px,py,posingle.lavx,posingle.lavy,posingle.ladestx,posingle.ladesty)
+		end
+end
+################################
+
 # AGGIORNAMENTO DI UNA POSIZIONE A VELOCITA' COSTANTE
 function aggiornamento(posingle::Statopedone)
 	px::Float64 = 0.0
@@ -234,7 +269,7 @@ function grafico_visitatori(finestra)
 end
 #################################################################################################
 # LOAD THE TEXTURE FOR THE IMAGE ##### DA METTERE IN UNA FUNZIONE
-texture = Texture("../../img/00-FASE0.jpg")
+texture = Texture("../../img/00-FASE1.jpg")
 set_smooth(texture, true)
 texture_size = get_size(texture)
 ######################################
@@ -359,7 +394,9 @@ while isopen(window)
 	for puntino in puntini
 		draw(window, puntino)
 	end
-
+#	for s in values(areacolosseo_coord)
+#		draw(window, disegna_poligono(s))
+#	end
 #	redraw(plotwindow)
 	# Disegna il grafico dei visitatori
 	grafico_visitatori(window)
