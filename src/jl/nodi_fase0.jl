@@ -38,7 +38,7 @@ const origini = [cn["n1"], cn["n15"], cn["n19"], cn["n28"]]
 #cn["n"] => [cn["n"],cn["n"],cn["n"],cn["n"],cn["n"]]
 
 const ledestinazioni = Dict{Array, Array}(
-cn["n1"] => [cn["n2"],cn["n2"],cn["n15"],cn["n29"]],
+cn["n1"] => [cn["n2"],cn["n2"],cn["n5"],cn["n5"],cn["n5"],cn["n5"],cn["n5"],cn["n15"],cn["n29"]],
 cn["n2"] => [cn["n3"],cn["n3"],cn["n3"],cn["n3"],cn["n3"],cn["n3"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n5"], cn["n6"], cn["n29"], cn["n15"], cn["n29"]],
 cn["n3"] => [cn["n2"], cn["n4"], cn["n4"], cn["n4"], cn["n4"], cn["n5"],cn["n14"],cn["n18"]],
 cn["n4"] => [cn["n7"]],

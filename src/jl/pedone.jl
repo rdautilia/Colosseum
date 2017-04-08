@@ -1,4 +1,4 @@
-const elle = 0.05 ::Float64		# Il raggio di non sovrapposizione dei pedoni
+const elle = 0.1 ::Float64		# Il raggio di non sovrapposizione dei pedoni
 
 ############################### QUESTA È IL TIPO STATOPEDONE
 type Statopedone 
@@ -34,8 +34,8 @@ end
 ## Calcola il versore principale, dalla posizione del pedone alla destinazione
 function versore_principale(pedone::Statopedone)
 	norm = sqrt((pedone.ladestx-pedone.lax)^2+(pedone.ladesty-pedone.lay)^2)
-	ex=(pedone.ladestx-pedone.lax)/norm
-	ey=(pedone.ladesty-pedone.lay)/norm
+	ex = (pedone.ladestx-pedone.lax)/norm
+	ey = (pedone.ladesty-pedone.lay)/norm
 	return  [ex ey]
 end
 ##########
@@ -138,7 +138,7 @@ a = rand(1:N)
 orig = scegli_origine()
 o1 = rand(orig[1]-5.0 : orig[1]+5.0)
 o2 = rand(orig[2]-5.0 : orig[2]+5.0)
-	if stato_dopo[a] == STATOPEDONE_ZERO && rand() < 0.1 #&& dest != orig
+	if stato_dopo[a] == STATOPEDONE_ZERO && rand() < 0.5 #&& dest != orig
 		stato_dopo[a] = Statopedone(o1,o2,10.02,10.02,orig[1],orig[2])
 	end
 end

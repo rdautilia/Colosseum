@@ -9,15 +9,15 @@ include("pedone.jl")
 include("nodi_fase1.jl")
 
 # INIZIALIZZO LE COSTANTI
-const GRAFO = 1
-const VINCOLI = 1
-const MOUSE = 1
-const N=500 ::Int64				# Il numero di pedoni
-const dt = 0.01 ::Float64			# Il passo di integrazione
+const GRAFO = 0
+const VINCOLI = 0
+const MOUSE = 0
+const N=2000 ::Int64				# Il numero di pedoni
+const dt = 0.15 ::Float64			# Il passo di integrazione
 const diag = sqrt(2) ::Float64		# diagonale
 const dimenpedone = 2.1 ::Float64	# La dimensione del disegno pedone	
-const scalax = 1.4 ::Float64		# lunghezza del passo di un pedone nella direzione x
-const scalay = 1.4 ::Float64		# lunghezza del passo di un pedone nella direzione y
+const scalax = 3.4 ::Float64		# lunghezza del passo di un pedone nella direzione x
+const scalay = 3.4 ::Float64		# lunghezza del passo di un pedone nella direzione y
 
 ############### La funzione che seleziona a caso un punto di partenza ###########
 function scegli_origine()
@@ -110,22 +110,14 @@ function aggiornamento_tcs(posingle::Statopedone)
 	py::Float64 = 0.0
 	vx::Float64 = 0.0
 	vy::Float64 = 0.0
-	lozx::Float64 = 0.0
-	lozy::Float64 = 0.0
 	
-#						lav =velocitaTCS(posingle,popolazione_attiva(stato_dopo), elle,5.2,1.0)
-#						lav = 50.5
-#						vx = lav*versore_complessivo(posingle,popolazione_attiva(stato_dopo))[1]
-#						vy = lav*versore_complessivo(posingle,popolazione_attiva(stato_dopo))[2]
-					if mod(duc,20) ==0
-						lozx = 1.0
-						lozy = 1.0
-					else
-						lozx = 0.0
-						lozy = 0.0
-					end
-						px = posingle.lax  + posingle.lavx*versore_principale(posingle)[1]*dt + lozx*(rand(-1.0:1.0)/2.0)*scalax*versore_principale(posingle)[1]
-						py = posingle.lay  + posingle.lavy*versore_principale(posingle)[2]*dt + lozy*(rand(-1.0:1.0)/2.0)*scalay*versore_principale(posingle)[2]
+						lav =velocitaTCS(posingle,popolazione_attiva(stato_dopo), elle,5.2,1.0)
+						#lav = 500.5
+					vx = lav*versore_complessivo(posingle,popolazione_attiva(stato_dopo))[1]
+					vy = lav*versore_complessivo(posingle,popolazione_attiva(stato_dopo))[2]
+
+					px = posingle.lax  + vx*dt
+					py = posingle.lay  + vy*dt
 						if distanza_destinazione(posingle)<1.0
 							destinazione = prossima_destinazione(posingle)
 							posingle.ladestx = destinazione[1]
@@ -152,15 +144,20 @@ function aggiornamento(posingle::Statopedone)
 #						lav = 50.5
 #						vx = lav*versore_complessivo(posingle,popolazione_attiva(stato_dopo))[1]
 #						vy = lav*versore_complessivo(posingle,popolazione_attiva(stato_dopo))[2]
-					if mod(duc,20) ==0
+					if mod(duc,rand(1:20)) == 0
 						lozx = 1.0
 						lozy = 1.0
 					else
 						lozx = 0.0
 						lozy = 0.0
 					end
+					if esterno(posingle.lax,posingle.lay,areacolosseo_coord) == 0
 						px = posingle.lax  + posingle.lavx*versore_principale(posingle)[1]*dt + lozx*(rand(-1.0:1.0)/2.0)*scalax*versore_principale(posingle)[1]
 						py = posingle.lay  + posingle.lavy*versore_principale(posingle)[2]*dt + lozy*(rand(-1.0:1.0)/2.0)*scalay*versore_principale(posingle)[2]
+					else
+						px = posingle.lax  + 0.4*posingle.lavx*versore_principale(posingle)[1]*dt + lozx*(rand(-1.0:1.0)/2.0)*scalax*versore_principale(posingle)[1]
+						py = posingle.lay  + 0.4*posingle.lavy*versore_principale(posingle)[2]*dt + lozy*(rand(-1.0:1.0)/2.0)*scalay*versore_principale(posingle)[2]
+					end
 						if distanza_destinazione(posingle)<1.0
 							destinazione = prossima_destinazione(posingle)
 							posingle.ladestx = destinazione[1]
@@ -174,9 +171,15 @@ function aggiornamento(posingle::Statopedone)
 end
 ################################
 
-# CALCOLO DELLE VELOCITA'
-function veloc(posprima,posdopo)
-return posdopo-posprima
+# Calcolo della velocità media
+function veloc(statoprima,statodopo)
+	lav = 0.0
+	for i in 1:size(statodopo)[1]
+		vx = (statodopo[i].lax-statoprima[i].lax)/dt
+		vy = (statodopo[i].lay-statoprima[i].lay)/dt
+		lav = lav + sqrt(vx^2+vy^2)
+	end
+	return lav/N
 end
 ################################
 
@@ -229,6 +232,10 @@ end
 function aggiornamento_totale(stato)
 		albero = KDTree(posizioni(stato))
 	for i=1:N
+#robTCS>		a = aggiornamento_tcs(stato[i])
+#robTCS>		if (esterno(a.lax,a.lay,edifici_coord)==0.0)
+#robTCS>			stato[i] = a
+#robTCS>		end
 		a = aggiornamento(stato[i])
 		if (length(inrange(albero, [a.lax, a.lay], elle, true)) == 0.0 && 	esterno(a.lax,a.lay,edifici_coord)==0.0)
 			stato[i] = a
@@ -275,9 +282,18 @@ texture_size = get_size(texture)
 ######################################
 
 # Create the text ##### DA METTERE IN UNA FUNZIONE
+iterazione_text = RenderText()
+#set_position(mousepos_text, Vector2f(texture_size.x+40, 20))
+set_position(iterazione_text, Vector2f(1040, 600))
+set_string(iterazione_text, "iterazione: ")
+set_color(iterazione_text, SFML.white)
+set_charactersize(iterazione_text, 18)
+##########################################
+
+# Create the text ##### DA METTERE IN UNA FUNZIONE
 mousepos_text = RenderText()
 #set_position(mousepos_text, Vector2f(texture_size.x+40, 20))
-set_position(mousepos_text, Vector2f(940, 20))
+set_position(mousepos_text, Vector2f(1010, 20))
 set_string(mousepos_text, "Mouse Position: ")
 set_color(mousepos_text, SFML.red)
 set_charactersize(mousepos_text, 18)
@@ -285,7 +301,7 @@ set_charactersize(mousepos_text, 18)
 # Create the text ##### DA METTERE IN UNA FUNZIONE
 pedattivi_text = RenderText()
 #set_position(mousepos_text, Vector2f(texture_size.x+40, 20))
-set_position(pedattivi_text, Vector2f(940, 40))
+set_position(pedattivi_text, Vector2f(1010, 40))
 #set_string(pedattivi_text, "Pedoni complessivi: ")
 set_color(pedattivi_text, SFML.Color(153,255,153))
 set_charactersize(pedattivi_text, 14)
@@ -293,7 +309,7 @@ set_charactersize(pedattivi_text, 14)
 # Create the text ##### DA METTERE IN UNA FUNZIONE
 nelcolosseo_text = RenderText()
 #set_position(mousepos_text, Vector2f(texture_size.x+40, 20))
-set_position(nelcolosseo_text, Vector2f(940, 60))
+set_position(nelcolosseo_text, Vector2f(1010, 60))
 #set_string(nelcolosseo_text, "Pedoni complessivi: ")
 set_color(nelcolosseo_text, SFML.Color(153,255,153))
 set_charactersize(nelcolosseo_text, 14)
@@ -323,6 +339,44 @@ view = get_default_view(window)
 #plotview = plotwindow.view
 set_framerate_limit(window, 120)
 event = Event()
+############## barretta
+function barretta_visitatori(finestra, quanti)
+	a_text = RenderText()
+	set_position(a_text, Vector2f(1008, 198))
+	set_string(a_text, "0")
+	set_color(a_text, SFML.Color(153,255,153))
+	set_charactersize(a_text, 12)
+	draw(finestra, a_text)	
+
+	b_text = RenderText()
+	set_position(b_text, Vector2f(1228, 198))
+	set_string(b_text, "100")
+	set_color(b_text, SFML.Color(153,255,153))
+	set_charactersize(b_text, 12)
+	draw(finestra, b_text)	
+
+	c_text = RenderText()
+	set_position(c_text, Vector2f(1020, 180))
+	set_string(c_text, "Percentuale visitatori")
+	set_color(c_text, SFML.Color(153,255,153))
+	set_charactersize(c_text, 12)
+	draw(finestra, c_text)	
+	
+	bordino = RectangleShape()
+	set_position(bordino,Vector2f(1020, 200))
+	set_size(bordino,Vector2f(200.0,10))
+	set_fillcolor(bordino, SFML.Color(64,64,64))
+	set_outline_thickness(bordino, 1)
+	set_outlinecolor(bordino, SFML.Color(153,255,153))
+	draw(finestra, bordino)
+	
+	barretta = RectangleShape()
+	set_position(barretta,Vector2f(1020, 200))
+	set_size(barretta,Vector2f(200.0*quanti/N,10))
+	set_fillcolor(barretta, SFML.Color(153,255,153))
+	set_outline_thickness(barretta, 1)
+	draw(finestra, barretta)
+end
 ############## il grafico
 puntini = CircleShape[]
 for i = 1:300
@@ -372,11 +426,15 @@ while isopen(window)
 	aggiungi_pedone()
 	stato_prima = copy(stato_dopo)
 	aggiornamento_totale(stato_dopo)
-	pa = length(popolazione_attiva(stato_dopo))
-	pnc = (nel_colosseo(stato_dopo))
+	pa = 16*length(popolazione_attiva(stato_dopo))
+	pnc = 16*(nel_colosseo(stato_dopo))
+#	println("{",veloc(stato_dopo,stato_prima),", ",pa/16,"},")
 	
 	set_string(pedattivi_text, "Popolazione: $pa")
 	set_string(nelcolosseo_text, "Visitatori: $pnc")
+#	set_string(iterazione_text, "Iterazione: $duc")
+
+
 	for i =1:N
 			set_position(circles[i], Vector2f(stato_dopo[i].lax, stato_dopo[i].lay))
 	end
@@ -386,20 +444,21 @@ while isopen(window)
 	for i = 1:length(circles)
 		draw(window, circles[i])
 	end
-	puntini=circshift(puntini,1)
-	for puntino in puntini
-		set_position(puntino, Vector2f(get_position(puntino)[1]+1, get_position(puntino)[2]))
-	end
-	set_position(puntini[1], Vector2f(944,218-pnc))
-	for puntino in puntini
-		draw(window, puntino)
-	end
+##rob>	puntini=circshift(puntini,1)
+##rob>	for puntino in puntini
+##rob>		set_position(puntino, Vector2f(get_position(puntino)[1]+1, get_position(puntino)[2]))
+##rob>	end
+##rob>	set_position(puntini[1], Vector2f(944,218-pnc))
+##rob>	for puntino in puntini
+##rob>		draw(window, puntino)
+##rob>	end
 #	for s in values(areacolosseo_coord)
 #		draw(window, disegna_poligono(s))
 #	end
 #	redraw(plotwindow)
 	# Disegna il grafico dei visitatori
-	grafico_visitatori(window)
+#	grafico_visitatori(window)
+	barretta_visitatori(window, pnc)
 	# Draw the plots
 if VINCOLI == 1
 	for s in values(edifici_coord)
@@ -408,6 +467,7 @@ if VINCOLI == 1
 end
 if MOUSE == 1
 	draw(window, mousepos_text)
+#	draw(window, iterazione_text)
 end
 	draw(window, pedattivi_text)
 	draw(window, nelcolosseo_text)
